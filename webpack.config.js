@@ -1,5 +1,4 @@
 'use strict';
-let webpack = require('webpack');
 
 module.exports = {
     context: __dirname + '/js',
@@ -14,7 +13,8 @@ module.exports = {
         loaders: [{
             test: /\.js$/,
             loader: 'babel-loader',
-            exclude: /node_modules/
+            exclude: /node_modules/,
+            query: {stage: 0}
         }, {
             test: /\.scss$/,
             loader: 'style-loader!css-loader!sass-loader'

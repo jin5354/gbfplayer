@@ -1,6 +1,7 @@
-const React = require('react');
-const GameWebview = require('./GameWebview.js');
-const GameFooter = require('./GameFooter.js');
+import React from 'react';
+import GameWebview from './GameWebview';
+import GameFooter from './GameFooter';
+import Tool from './Tool';
 
 class App extends React.Component {
     render() {
@@ -10,7 +11,7 @@ class App extends React.Component {
                     <GameWebview />
                     <GameFooter />
                 </div>
-                <div id="tool"></div>
+                <Tool />
             </div>
         );
     }

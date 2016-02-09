@@ -1,6 +1,6 @@
 'use strict';
 
-const electron = require('electron');
+import electron from 'electron';
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -10,7 +10,7 @@ let mainWindow;
 let createWindow = () => {
 
     mainWindow = new BrowserWindow({
-        'width': 320,
+        'width': 750,
         'height': 568
     });
     
@@ -34,6 +34,8 @@ let createWindow = () => {
     */
    
     //mainWindow.loadURL('file://' + __dirname + '/index2.html');
+    
+    mainWindow.setResizable(false);
     mainWindow.loadURL('http://localhost:3000');
 
     mainWindow.webContents.openDevTools();
