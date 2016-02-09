@@ -3,3 +3,76 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+#react-root {
+    width: 100vw;
+    height: 100vh;
+}
+
+#react-root>div {
+    width: 100%;
+    height: 100%;
+}
+
+#container {
+    position: relative;
+    width: 320px;
+    height: 100%;
+}
+
+#footer {
+    background: url(../images/footer/pc_footer_base.png) no-repeat;
+    background-size: 320px auto;
+    width: 320px;
+    height: 45px;
+    bottom: 0px;
+    left: 0;
+    position: absolute;
+}
+
+#footer-back {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    top: 6px;
+    left: 0;
+    background-image: url(../images/footer/button_back_off.png);
+    background-size: cover;
+
+    &:hover {
+        background-image: url(../images/footer/button_back_on.png)
+    }
+}
+
+#footer-mypage {
+    position: absolute;
+    width: 48px;
+    height: 44px;
+    right: 4px;
+    top: 1px;
+    background-image: url(../images/footer/button_mypage_off.png);
+    background-size: auto 44px;
+
+    &:hover {
+        background-image: url(../images/footer/button_mypage_on.png);
+    }
+
+}
+
+#footer-reload {
+    position: absolute;
+    width: 48px;
+    height: 44px;
+    right: 55px;
+    top: 1px;
+    background-image: url(../images/footer/button_reload_off.png);
+    background-size: auto 44px;
+    
+    &:hover {
+        background-image: url(../images/footer/button_reload_on.png);
+    }
+}

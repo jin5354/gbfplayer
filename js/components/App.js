@@ -1,20 +1,16 @@
 const React = require('react');
-const GameWebview = require('./gameWebview.js');
+const GameWebview = require('./GameWebview.js');
+const GameFooter = require('./GameFooter.js');
 
 class App extends React.Component {
     render() {
         return (
-            <div id="container">
-                <GameWebview />
-                <div id="footer">
-                    <div id="footer-ctrl">
-                        <div id="footer-back"></div>
-                        <div id="footer-navi">
-                            <div id="footer-reload"></div>
-                            <div id="footer-mypage"></div>
-                        </div>
-                    </div>
+            <div>
+                <div id="container">
+                    <GameWebview />
+                    <GameFooter />
                 </div>
+                <div id="tool"></div>
             </div>
         );
     }

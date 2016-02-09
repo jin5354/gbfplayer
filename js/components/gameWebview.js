@@ -1,6 +1,6 @@
 const React = require('react');
 
-class gameWebview extends React.Component {
+class GameWebview extends React.Component {
     render() {
         return (
             <webview disablewebsecurity src="http://gbf.game.mbga.jp/"></webview>
@@ -8,4 +8,4 @@ class gameWebview extends React.Component {
     }
 }
 
-export default gameWebview;
+export default GameWebview;
