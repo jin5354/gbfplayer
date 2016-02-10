@@ -1,6 +1,6 @@
-'use strict';
+var webpackTargetElectronRenderer = require('webpack-target-electron-renderer');
 
-module.exports = {
+var options = {
     context: __dirname + '/js',
     entry: './entry.js',
 
@@ -19,8 +19,15 @@ module.exports = {
             test: /\.scss$/,
             loader: 'style-loader!css-loader!sass-loader'
         },{
+            test: /\.less$/,
+            loader: 'style-loader!css-loader!less-loader'
+        },{
             test: /\.(jpg|png)$/,
             loader: 'url-loader?limit=100000'
         }]
     }
 };
+
+options.target = webpackTargetElectronRenderer(options);
+
+module.exports = options;

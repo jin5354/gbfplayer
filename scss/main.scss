@@ -24,6 +24,11 @@
     width: 320px;
     height: 100%;
 
+    #webview-wrapper {
+        width: 320px;
+        height: 520px;
+    }
+
     #footer {
         background: url(../images/footer/pc_footer_base.png) no-repeat;
         background-size: 320px auto;
@@ -81,4 +86,20 @@
 #tool {
     width: 430px;
     height: 100%;
+
+    .ant-tabs-content {
+        margin: 0 20px;
+
+        #DevPanel {
+            .ant-btn {
+                margin: 0 5px;
+            }
+        }
+
+
+
+    }
+
+
+
 }

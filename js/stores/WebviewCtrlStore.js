@@ -12,10 +12,10 @@ AppDispatcher.register((action) => {
 });
 
 export default {
-    addChangeListener(callback) {
-        emitter.addListener('change',callback);
+    addEventListener(event, callback) {
+        emitter.addListener(event,callback);
     },
-    removeChangeListener(callback) {
-        emitter.removeListener('change',callback);
+    removeEventListener(event, callback) {
+        emitter.removeListener(event,callback);
     }
 };

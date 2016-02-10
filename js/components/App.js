@@ -2,13 +2,18 @@ import React from 'react';
 import GameWebview from './GameWebview';
 import GameFooter from './GameFooter';
 import Tool from './Tool';
+import Bridge from '../services/bridge';
+
+Bridge.init();
 
 class App extends React.Component {
     render() {
         return (
             <div>
                 <div id="container">
-                    <GameWebview />
+                    <div id="webview-wrapper">
+                        <GameWebview />
+                    </div>
                     <GameFooter />
                 </div>
                 <Tool />

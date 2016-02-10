@@ -2,12 +2,21 @@ import React from 'react';
 import WebviewCtrlStore from '../stores/WebviewCtrlStore';
 
 class GameWebview extends React.Component {
+
     componentDidMount() {
 
         let webview = this.refs.gameWebview;
 
-        WebviewCtrlStore.addChangeListener((event) => {
-
+        let css = `body {
+            -webkit-font-smoothing: antialiased;
+        }`;
+        
+        webview.addEventListener('did-finish-load', () => {
+            console.log('finish!');
+            webview.insertCSS(css);
+        });
+        
+        WebviewCtrlStore.addEventListener('change', (event) => {
             switch(event) {
             case 'goBack':
                 webview.goBack();
@@ -17,14 +26,13 @@ class GameWebview extends React.Component {
                 break;
             case 'gotoMypage':
                 webview.loadURL('http://gbf.game.mbga.jp/#mypage');
+                break;
+            case 'openDevTools':
+                webview.openDevTools();
+                break;
             }
-
         });
-        /*
-        this.refs.gameWebview.addEventListener('did-start-loading', () => {
-            console.log('GameWebview start loading!');
-        });
-        */
+                
     }
     render() {
         return (
