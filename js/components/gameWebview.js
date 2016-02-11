@@ -37,8 +37,9 @@ class GameWebview extends React.Component {
     render() {
         return (
             <webview ref="gameWebview" disablewebsecurity src="http://gbf.game.mbga.jp/"></webview>
+            
         );
     }
 }
-
+//<webview ref="gameWebview" disablewebsecurity src="http://gbf.game.mbga.jp/"></webview>
 export default GameWebview;

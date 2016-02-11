@@ -1,6 +1,7 @@
 var http = require("http");
 var net = require("net");
 var url = require("url");
+var zlib = require('zlib');
 var AppDispatcher = require("../dispatcher/AppDispatcher");
 var port ;
 var _webContents;
@@ -74,7 +75,6 @@ MiniProxy.prototype.requestHandler = function(req, res) {
     
     function requestRemote(requestOptions, req, res, proxy) {
         var remoteRequest = http.request(requestOptions, function(remoteResponse) {
-            remoteResponse.headers['proxy-agent'] = 'Easy Proxy 1.0';
 
             // write out headers to handle redirects
             res.writeHead(remoteResponse.statusCode, '', remoteResponse.headers);
@@ -88,24 +88,36 @@ MiniProxy.prototype.requestHandler = function(req, res) {
                 'httpMessage': remoteResponse.socket._httpMessage
             };
 
-            if(remoteResponse.headers['content-type'] && remoteResponse.headers['content-type'].search(/json/ig) !== -1) {
-                var body = '';      
+            if(remoteResponse.headers['content-type'] && remoteResponse.headers['content-type'].indexOf('json') !== -1) {
+
+                var body = [];
                 remoteResponse.on('data',function(chunk){  
-                    body += chunk;  
+                    body.push(chunk);  
                 });   
-                remoteResponse.on('end',function(){  
-                    try {
-                        resObj.body = JSON.parse(body);
-                    } catch(e) {
-                        //console.log("JSONParseError" + e.message);
-                        resObj.body = body;
+                remoteResponse.on('end',function(){
+                    var buffer = Buffer.concat(body);
+                    if(remoteResponse.headers['content-encoding'].indexOf('gzip') !== -1) {
+                        zlib.gunzip(buffer, function(err, dezipped) {
+                            try{
+                                resObj.body = JSON.parse(dezipped.toString('utf-8'));
+                            }catch (e) {
+                                resObj.body = dezipped.toString('utf-8');
+                            }
+                            proxy.emit("beforeResponse", resObj);                      
+                        });
+                    }else {
+                        try{
+                            resObj.body = JSON.parse(buffer.toString('utf-8'));
+                        }catch (e) {
+                            resObj.body = buffer.toString('utf-8');
+                        }
+                        proxy.emit("beforeResponse", resObj);
                     }
-                    
                     // u can change resonse here
-                    proxy.emit("beforeResponse", resObj);
                 });
+
             }else {
-                proxy.emit("beforeResponse", resObj);
+                //proxy.emit("beforeResponse", resObj);
             }
 
             remoteResponse.pipe(res);
@@ -162,8 +174,7 @@ MiniProxy.prototype.connectHandler = function(req, socket, head) {
             var tunnel = net.createConnection(requestOptions, function() {
                 //format http protocol
                 _synReply(socket, 200, 'Connection established', {
-                        'Connection': 'keep-alive',
-                        'Proxy-Agent': 'Easy Proxy 1.0'
+                        'Connection': 'keep-alive'
                     },
                     function(error) {
                         if (error) {

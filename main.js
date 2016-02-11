@@ -30,6 +30,7 @@ let createWindow = () => {
     //set Proxy
     session.setProxy({
         proxyRules: 'http=127.0.0.1:9393;https=127.0.0.1:9393'
+        //proxyRules: 'http=127.0.0.1:8888'
     }, () => {
         //mainWindow.loadURL('http://www.baidu.com');
         mainWindow.loadURL('http://localhost:3000');

@@ -3,22 +3,22 @@ import AppDispatcher from '../dispatcher/AppDispatcher';
 
 let emitter = new EventEmitter();
 
-let _res = {num: 1};
+let _res = [];
 
-let _req = {};
+let _req = [];
 
 let _gameData = {};
 
 AppDispatcher.register((action) => {
-    console.log('get action');
     if(action.type === 'HTTPData') {
         if(action.data) {
             if(action.msg === 'res') {
-                _res.num++;
+                console.log(action.data);
+                //_res.push(action.data);
             }else if (action.msg === 'req') {
-                _req = action.data;
+                //_req.push(action.data);
             }
-            emitter.emit('change');
+            emitter.emit('HTTPDataUpdate');
         }
     }
 });
@@ -26,6 +26,9 @@ AppDispatcher.register((action) => {
 export default {
     getRes() {
         return _res;
+    },
+    getReq() {
+        return _req;
     },
     addEventListener(event, callback) {
         emitter.addListener(event, callback);

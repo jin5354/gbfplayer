@@ -21,8 +21,10 @@ class DevPanel extends React.Component {
     render() {
         return (
             <div id="DevPanel">
-                <Button type="primary" size="small" onClick={this.openSelfDevTools}>打开DevTools</Button>
-                <Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button>
+                <div>
+                    <Button type="primary" size="small" onClick={this.openSelfDevTools}>打开DevTools</Button>
+                    <Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button>
+                </div>
             </div>
         );
     }
