@@ -12,7 +12,6 @@ class GameWebview extends React.Component {
         }`;
         
         webview.addEventListener('did-finish-load', () => {
-            console.log('finish!');
             webview.insertCSS(css);
         });
         

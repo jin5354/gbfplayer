@@ -88,6 +88,8 @@ MiniProxy.prototype.requestHandler = function(req, res) {
                 'httpMessage': remoteResponse.socket._httpMessage
             };
 
+            resObj.url = resObj.host + resObj.path;
+
             if(remoteResponse.headers['content-type'] && remoteResponse.headers['content-type'].indexOf('json') !== -1) {
 
                 var body = [];
@@ -103,6 +105,9 @@ MiniProxy.prototype.requestHandler = function(req, res) {
                             }catch (e) {
                                 resObj.body = dezipped.toString('utf-8');
                             }
+                            if(dezipped.toString('utf-8').search(/15523/ig) !== -1) {
+                                console.log(resObj.body);
+                            }
                             proxy.emit("beforeResponse", resObj);                      
                         });
                     }else {
@@ -113,6 +118,7 @@ MiniProxy.prototype.requestHandler = function(req, res) {
                         }
                         proxy.emit("beforeResponse", resObj);
                     }
+
                     // u can change resonse here
                 });
 

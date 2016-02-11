@@ -33,7 +33,8 @@ let createWindow = () => {
         //proxyRules: 'http=127.0.0.1:8888'
     }, () => {
         //mainWindow.loadURL('http://www.baidu.com');
-        mainWindow.loadURL('http://localhost:3000');
+        //mainWindow.loadURL('http://localhost:3000');
+        mainWindow.loadURL('file://' + __dirname + '/index.html');
     });
    
     //mainWindow.loadURL('file://' + __dirname + '/index2.html');
