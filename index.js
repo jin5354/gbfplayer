@@ -27,6 +27,7 @@ let createWindow = () => {
 
     mainWindow.setResizable(false);
     mainWindow.setAutoHideMenuBar(true);
+    mainWindow.setMaximizable(false);
     
     //set Proxy
     session.setProxy({
