@@ -105,9 +105,6 @@ MiniProxy.prototype.requestHandler = function(req, res) {
                             }catch (e) {
                                 resObj.body = dezipped.toString('utf-8');
                             }
-                            if(dezipped.toString('utf-8').search(/15523/ig) !== -1) {
-                                console.log(resObj.body);
-                            }
                             proxy.emit("beforeResponse", resObj);                      
                         });
                     }else {

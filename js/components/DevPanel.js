@@ -15,7 +15,9 @@ class DevPanel extends React.Component {
         });
     }
     openSelfDevTools() {
-        remote.getCurrentWindow().toggleDevTools();
+        remote.getCurrentWindow().openDevTools({
+            detach: true
+        });
     }
     render() {
         return (

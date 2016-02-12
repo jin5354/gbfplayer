@@ -11,7 +11,7 @@ let mainWindow;
 let createWindow = () => {
 
     mainWindow = new BrowserWindow({
-        'width': 750,
+        'width': 700,
         'height': 568
     });
 
@@ -26,21 +26,15 @@ let createWindow = () => {
     });
 
     mainWindow.setResizable(false);
+    mainWindow.setAutoHideMenuBar(true);
     
     //set Proxy
     session.setProxy({
         proxyRules: 'http=127.0.0.1:9393;https=127.0.0.1:9393'
-        //proxyRules: 'http=127.0.0.1:8888'
     }, () => {
-        //mainWindow.loadURL('http://www.baidu.com');
-        //mainWindow.loadURL('http://localhost:3000');
-        mainWindow.loadURL('file://' + __dirname + '/index.html');
+        mainWindow.loadURL('http://localhost:3000');
+        //mainWindow.loadURL('file://' + __dirname + '/index.html');
     });
-   
-    //mainWindow.loadURL('file://' + __dirname + '/index2.html');
-    //mainWindow.loadURL('http://localhost:3000');
-
-    //mainWindow.webContents.openDevTools();
 
 };
 

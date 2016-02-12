@@ -4,11 +4,8 @@
     box-sizing: border-box;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
-
 #react-root {
+    overflow: hidden;
     width: 100vw;
     height: 100vh;
 }
@@ -84,7 +81,7 @@
 }
 
 #tool {
-    width: 430px;
+    width: 380px;
     height: 100%;
 
     .ant-tabs-content {
@@ -98,8 +95,14 @@
         }
 
         #UserInfo {
-            span {
-                margin: 0 5px;
+
+            .wrap {
+                display: flex;
+                flex-wrap: wrap;
+
+                span {
+                    width: 33%;
+                }
             }
         }
     }

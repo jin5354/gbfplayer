@@ -9,7 +9,11 @@ class GameWebview extends React.Component {
 
         let css = `body {
             -webkit-font-smoothing: antialiased;
-        }`;
+        }
+       ::-webkit-scrollbar  {
+            display: none;
+        }
+        `;
         
         webview.addEventListener('did-finish-load', () => {
             webview.insertCSS(css);

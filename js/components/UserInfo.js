@@ -14,7 +14,7 @@ class UserInfo extends React.Component {
         return (
             <div id="UserInfo">
                 <p>UserInfo</p>
-                <p>
+                <p className="wrap">
                     <span>userName: {this.renderUserInfo().userName || ''}</span>
                     <span>guildName: {this.renderUserInfo().guildName || ''}</span>
                     <span>rank: {this.renderUserInfo().rank || ''}</span>

@@ -9,9 +9,9 @@ import {Tabs, Icon} from 'antd';
 const TabPane = Tabs.TabPane;
 
 const tabContent = [
-    <span><Icon type="apple" />状态</span>,
-    <span><Icon type="android" />空着</span>,
-    <span><Icon type="setting" />开发工具</span>
+    <span><Icon type="solution" />Info</span>,
+    <span><Icon type="appstore" />Tool</span>,
+    <span><Icon type="setting" />Dev</span>
 ];
 
 class Tool extends React.Component {
