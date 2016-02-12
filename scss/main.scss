@@ -94,7 +94,8 @@
             }
         }
 
-        #UserInfo {
+        #UserInfo,
+        #Status {
 
             .wrap {
                 display: flex;
@@ -105,5 +106,6 @@
                 }
             }
         }
+
     }
 }

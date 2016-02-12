@@ -8,7 +8,8 @@ let _res = [];
 let _req = [];
 
 let _gameData = {
-    userInfo: {}
+    userInfo: {},
+    status: {}
 };
 
 let parse = {
@@ -33,6 +34,20 @@ let parse = {
 
         _gameData.userInfo = userInfo;
         emitter.emit('UserInfoUpdate');
+    },
+    status(data) {
+        let status = {};
+
+        status.ap = data.mydata.status.now_action_point;
+        status.maxAp = data.mydata.status.max_action_point;
+        status.bp = data.mydata.status.now_battle_point;
+        status.maxBp = data.mydata.status.max_battle_point;
+        status.apGauge = data.mydata.status.action_point_gauge;
+        status.apRemainTime = data.mydata.status.action_point_remain;
+        status.bpRemainTime = data.mydata.status.battle_point_remain;
+
+        _gameData.status = status;
+        emitter.emit('StatusUpdate');
     }
 };
 
@@ -49,7 +64,11 @@ AppDispatcher.register((action) => {
                     parse.userInfo(action.data.body);
                 }
 
-                //console.log(action.data);
+                if(action.data.url.search(/user\/data_assets/ig) !== -1) {
+                    parse.status(action.data.body);
+                }
+
+                console.log(action.data);
                 //_res.push(action.data);
             }else if (action.msg === 'req') {
                 //_req.push(action.data);
@@ -68,6 +87,9 @@ export default {
     },
     getUserInfo() {
         return _gameData.userInfo;
+    },
+    getStatus() {
+        return _gameData.status;
     },
     addEventListener(event, callback) {
         emitter.addListener(event, callback);

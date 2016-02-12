@@ -24,6 +24,7 @@ class Tool extends React.Component {
                 <Tabs defaultActiveKey="1">
                     <TabPane tab={tabContent[0]} key="1">
                         <UserInfo />
+                        <br />
                         <Status />
                     </TabPane>
                     <TabPane tab={tabContent[1]} key="2">空着</TabPane>

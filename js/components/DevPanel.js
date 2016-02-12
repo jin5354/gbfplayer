@@ -25,6 +25,8 @@ class DevPanel extends React.Component {
                 <div>
                     <Button type="primary" size="small" onClick={this.openSelfDevTools}>打开DevTools</Button>
                     <Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button>
+                    <br /><br /><br /><br /><br />
+                    <p>Build by electron + react.js + ant.design.</p>
                 </div>
             </div>
         );
