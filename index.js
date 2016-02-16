@@ -2,6 +2,7 @@
 
 const electron = require('electron');
 const proxy = require('./js/services/proxy');
+const ipcMain = require('electron').ipcMain;
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -15,9 +16,9 @@ let createWindow = () => {
         'height': 568
     });
 
-    proxy.setWebContents(mainWindow.webContents);
-    
     let session = mainWindow.webContents.session;
+
+    proxy.setWebContents(mainWindow.webContents);
     
     // set iphone UA
     session.webRequest.onBeforeSendHeaders(function(details, callback) {
@@ -37,6 +38,21 @@ let createWindow = () => {
         //mainWindow.loadURL('file://' + __dirname + '/index.html');
     });
 
+    ipcMain.on('clearCache-msg', (event, arg) => {
+        if(arg === 'clearCache') {
+            session.clearStorageData(() => {
+                event.sender.send('clearCache-reply', '缓存清除完毕！');
+            });
+        }
+    });
+
+    ipcMain.on('switch-window-msg', function(event, arg) {
+        if(mainWindow.getSize()[0] === 700) {
+            mainWindow.setSize(320, 568);
+        }else {
+            mainWindow.setSize(700, 568);
+        }
+    });
 };
 
 app.on('ready', createWindow);
