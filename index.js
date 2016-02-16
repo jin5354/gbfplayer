@@ -46,7 +46,7 @@ let createWindow = () => {
         }
     });
 
-    ipcMain.on('switch-window-msg', function(event, arg) {
+    ipcMain.on('switch-window-msg', function() {
         if(mainWindow.getSize()[0] === 700) {
             mainWindow.setSize(320, 568);
         }else {
