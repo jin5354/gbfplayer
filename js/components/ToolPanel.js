@@ -1,30 +1,56 @@
 import React from 'react';
 import GameDataStore from '../stores/GameDataStore';
 import AppDispatcher from '../dispatcher/AppDispatcher';
-import {Button} from 'antd';
+import notifier from 'node-notifier';
+import {Button, Switch} from 'antd';
 
 class ToolPanel extends React.Component {
     componentDidMount() {
-        //GameDataStore.addEventListener('change', this.forceUpdate.bind(this));
     }
-    startGamblingPoker() {
-        AppDispatcher.dispatch({
-            type: 'gameWebviewCtrl',
-            msg: 'startGambling-poker'
-        });
+
+    pokerOnChange(checked) {
+        if(checked) {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'startGambling-poker'
+            });
+        }else {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'stopGambling-poker'
+            });
+        }
     }
-    startGamblingSlot() {
-        AppDispatcher.dispatch({
-            type: 'gameWebviewCtrl',
-            msg: 'startGambling-slot'
+    slotOnChange(checked) {
+        if(checked) {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'startGambling-slot'
+            });
+        }else {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'stopGambling-slot'
+            });
+        }
+    }
+    testnoti() {
+        console.log('noti!');
+        notifier.notify({
+            'title': 'My notification',
+            'message': 'Hello, there!'
+        }, (err) => {
+            console.log(err);
+            // Response is response from notification
         });
     }
     render() {
         return (
             <div id="ToolPanel">
                 <div>
-                    <Button type="primary" size="small" onClick={this.startGamblingPoker}>开始poker挂机</Button>
-                    <Button type="primary" size="small" onClick={this.startGamblingSlot}>开始slot挂机</Button>
+                    <p>开启poker挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.pokerOnChange} /></p>
+                    <p>开启slot挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.slotOnChange} /></p>
+                    <Button type="primary" size="small" onClick={this.testnoti}>测试通知</Button>
                 </div>
             </div>
         );

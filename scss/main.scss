@@ -107,6 +107,10 @@
         box-sizing: border-box;
         padding: 0 20px;
 
+        p {
+            margin-bottom: 5px;
+        }
+
         #DevPanel,
         #ToolPanel {
             .ant-btn {

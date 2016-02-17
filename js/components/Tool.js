@@ -2,6 +2,7 @@ import React from 'react';
 import DevPanel from './DevPanel';
 import UserInfo from './UserInfo';
 import Status from './Status';
+import AppDispatcher from '../dispatcher/AppDispatcher';
 import ToolPanel from './ToolPanel';
 import '../../scss/antd.less';
 import {Tabs, Icon} from 'antd';
@@ -15,7 +16,14 @@ const tabContent = [
 
 class Tool extends React.Component {
     componentDidMount() {
-        //GameDataStore.addEventListener('change', this.forceUpdate.bind(this));
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'startGambling-poker'
+        });
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'startGambling-slot'
+        });
     }
     render() {
         return (

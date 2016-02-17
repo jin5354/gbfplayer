@@ -14,10 +14,10 @@ class UserInfo extends React.Component {
         return (
             <div id="UserInfo">
                 <p>个人信息</p>
-                <p>{this.renderUserInfo().userName || ''}  Lv.{this.renderUserInfo().rank || '' }</p>
-                <p>lupi: {this.renderUserInfo().lupi || ''}  stone: {this.renderUserInfo().stone || ''}  rowStone: {this.renderUserInfo().rowStone || ''}</p>
-                <p>jp: {this.renderUserInfo().jp || ''}  jobLv: {this.renderUserInfo().jobLv || ''}</p>
-                <p>power: {this.renderUserInfo().power || ''}  powerLv: {this.renderUserInfo().powerLv || ''}</p>
+                <p>{this.renderUserInfo().userName || ''} &nbsp;&nbsp;&nbsp; Lv.{this.renderUserInfo().rank || '' }</p>
+                <p>lupi: {this.renderUserInfo().lupi || ''} &nbsp;&nbsp;&nbsp; stone: {this.renderUserInfo().stone || ''} &nbsp;&nbsp;&nbsp; rowStone: {this.renderUserInfo().rowStone || ''}</p>
+                <p>jp: {this.renderUserInfo().jp || ''} &nbsp;&nbsp;&nbsp; jobLv: {this.renderUserInfo().jobLv || ''}</p>
+                <p>power: {this.renderUserInfo().power || ''} &nbsp;&nbsp;&nbsp; powerLv: {this.renderUserInfo().powerLv || ''}</p>
             </div>
         );
     }

@@ -25,6 +25,10 @@ var options = {
             test: /\.(jpg|png)$/,
             loader: 'url-loader?limit=100000'
         }]
+    },
+
+    node: {
+        __dirname: true
     }
 };
 
