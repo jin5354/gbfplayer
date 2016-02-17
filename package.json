@@ -14,7 +14,6 @@
     "antd": "^0.12.1",
     "electron-prebuilt": "^0.36.7",
     "flux": "^2.1.1",
-    "node-notifier": "^4.5.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "socks5-http-client": "^1.0.2"

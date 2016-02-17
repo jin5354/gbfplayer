@@ -2,9 +2,11 @@ import React from 'react';
 import GameWebview from './GameWebview';
 import GameFooter from './GameFooter';
 import Tool from './Tool';
-import Bridge from '../services/bridge';
+import bridge from '../services/bridge';
+import notification from '../services/notification';
 
-Bridge.init();
+bridge.init();
+notification.init();
 
 class App extends React.Component {
     render() {

@@ -42,17 +42,31 @@ let parse = {
 
         let status = {};
 
+        let apNotiFlag = 1;
+        let bpNotiFlag = 1;
+
         let updateStatus = () => {
             _gameData.status = status;
             emitter.emit('StatusUpdate');
-            if(_gameData.status.ap === _gameData.status.maxAp) {
-                emitter.emit('ApMax');
+            if(apNotiFlag) {
+                if(_gameData.status.ap === _gameData.status.maxAp) {
+                    emitter.emit('ApMax', _gameData.status.ap);
+                    apNotiFlag = 0;
+                }else {
+                    apNotiFlag = 1;
+                }
             }
-            if(_gameData.status.bp === _gameData.status.maxBp) {
-                emitter.emit('BpMax');
+            if(bpNotiFlag) {
+                if(_gameData.status.bp === _gameData.status.maxBp) {
+                    emitter.emit('BpMax', _gameData.status.bp);
+                    bpNotiFlag = 0;
+                }else {
+                    bpNotiFlag = 1;
+                }
+
             }
         };
-        
+
         //gbf.game.mbga.jp/user/data_assets
         if(data.url.search(/user\/data_assets/ig) !== -1) {
 
