@@ -9,7 +9,11 @@ let _req = [];
 
 let _gameData = {
     userInfo: {},
-    status: {}
+    status: {},
+    notiFlag: {
+        ap: 1,
+        bp: 1
+    }
 };
 
 let parse = {
@@ -42,26 +46,23 @@ let parse = {
 
         let status = {};
 
-        let apNotiFlag = 1;
-        let bpNotiFlag = 1;
-
         let updateStatus = () => {
             _gameData.status = status;
             emitter.emit('StatusUpdate');
-            if(apNotiFlag) {
+            if(_gameData.notiFlag.ap) {
                 if(_gameData.status.ap === _gameData.status.maxAp) {
                     emitter.emit('ApMax', _gameData.status.ap);
-                    apNotiFlag = 0;
+                    _gameData.notiFlag.ap = 0;
                 }else {
-                    apNotiFlag = 1;
+                    _gameData.notiFlag.ap = 1;
                 }
             }
-            if(bpNotiFlag) {
+            if(_gameData.notiFlag.bp) {
                 if(_gameData.status.bp === _gameData.status.maxBp) {
                     emitter.emit('BpMax', _gameData.status.bp);
-                    bpNotiFlag = 0;
+                    _gameData.notiFlag.bp = 0;
                 }else {
-                    bpNotiFlag = 1;
+                    _gameData.notiFlag.bp = 1;
                 }
 
             }
