@@ -89,16 +89,28 @@
 }
 
 #tool {
-    width: 380px;
+    width: 330px;
     height: 100%;
+
+    .ant-tabs-nav {
+
+        .ant-tabs-tab-inner {
+            padding: 5px 15px;
+        }
+
+        .ant-tabs-tab {
+            margin-right: 20px;   
+        }
+    }
 
     .ant-tabs-content {
         box-sizing: border-box;
         padding: 0 20px;
 
-        #DevPanel {
+        #DevPanel,
+        #ToolPanel {
             .ant-btn {
-                margin: 0 5px;
+                margin: 0 5px 5px;
             }
         }
 
@@ -106,11 +118,9 @@
         #Status {
 
             .wrap {
-                display: flex;
-                flex-wrap: wrap;
 
                 span {
-                    width: 33%;
+
                 }
             }
         }

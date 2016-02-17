@@ -12,7 +12,7 @@ let mainWindow;
 let createWindow = () => {
 
     mainWindow = new BrowserWindow({
-        'width': 700,
+        'width': 650,
         'height': 568
     });
 
@@ -47,10 +47,10 @@ let createWindow = () => {
     });
 
     ipcMain.on('switch-window-msg', function() {
-        if(mainWindow.getSize()[0] === 700) {
+        if(mainWindow.getSize()[0] === 650) {
             mainWindow.setSize(320, 568);
         }else {
-            mainWindow.setSize(700, 568);
+            mainWindow.setSize(650, 568);
         }
     });
 };

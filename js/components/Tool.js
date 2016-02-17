@@ -2,8 +2,7 @@ import React from 'react';
 import DevPanel from './DevPanel';
 import UserInfo from './UserInfo';
 import Status from './Status';
-import GameDataStore from '../stores/GameDataStore';
-import AppDispatcher from '../dispatcher/AppDispatcher';
+import ToolPanel from './ToolPanel';
 import '../../scss/antd.less';
 import {Tabs, Icon} from 'antd';
 const TabPane = Tabs.TabPane;
@@ -27,7 +26,9 @@ class Tool extends React.Component {
                         <br />
                         <Status />
                     </TabPane>
-                    <TabPane tab={tabContent[1]} key="2">空着</TabPane>
+                    <TabPane tab={tabContent[1]} key="2">
+                        <ToolPanel />
+                    </TabPane>
                     <TabPane tab={tabContent[2]} key="3">
                         <DevPanel />
                     </TabPane>

@@ -1,4 +1,7 @@
 import React from 'react';
+import {app} from 'remote';
+import fs from 'fs';
+import path from 'path';
 import WebviewCtrlStore from '../stores/WebviewCtrlStore';
 
 class GameWebview extends React.Component {
@@ -18,7 +21,8 @@ class GameWebview extends React.Component {
         webview.addEventListener('did-finish-load', () => {
             webview.insertCSS(css);
         });
-        
+
+        let dirname = app.getAppPath();
         WebviewCtrlStore.addEventListener('change', (event) => {
             switch(event) {
             case 'goBack':
@@ -32,6 +36,14 @@ class GameWebview extends React.Component {
                 break;
             case 'openDevTools':
                 webview.openDevTools();
+                break;
+            case 'startGambling-poker':
+                let pokerJS = fs.readFileSync(path.join(dirname, 'casino_poker.js'), 'utf-8');
+                webview.executeJavaScript(pokerJS);
+                break;
+            case 'startGambling-slot':
+                let slotJS = fs.readFileSync(path.join(dirname, 'casino_slot.js'), 'utf-8');
+                webview.executeJavaScript(slotJS);
                 break;
             }
         });

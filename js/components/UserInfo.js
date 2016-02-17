@@ -13,19 +13,11 @@ class UserInfo extends React.Component {
     render() {
         return (
             <div id="UserInfo">
-                <p>UserInfo</p>
-                <p className="wrap">
-                    <span>userName: {this.renderUserInfo().userName || ''}</span>
-                    <span>guildName: {this.renderUserInfo().guildName || ''}</span>
-                    <span>rank: {this.renderUserInfo().rank || ''}</span>
-                    <span>jobLv: {this.renderUserInfo().jobLv || ''}</span>
-                    <span>lupi: {this.renderUserInfo().lupi || ''}</span>
-                    <span>stone: {this.renderUserInfo().stone || ''}</span>
-                    <span>jp: {this.renderUserInfo().jp || ''}</span>
-                    <span>rowStone: {this.renderUserInfo().rowStone || ''}</span>
-                    <span>power: {this.renderUserInfo().power || ''}</span>
-                    <span>powerLv: {this.renderUserInfo().powerLv || ''}</span>
-                </p>
+                <p>个人信息</p>
+                <p>{this.renderUserInfo().userName || ''}  Lv.{this.renderUserInfo().rank || '' }</p>
+                <p>lupi: {this.renderUserInfo().lupi || ''}  stone: {this.renderUserInfo().stone || ''}  rowStone: {this.renderUserInfo().rowStone || ''}</p>
+                <p>jp: {this.renderUserInfo().jp || ''}  jobLv: {this.renderUserInfo().jobLv || ''}</p>
+                <p>power: {this.renderUserInfo().power || ''}  powerLv: {this.renderUserInfo().powerLv || ''}</p>
             </div>
         );
     }
