@@ -38,6 +38,8 @@ let createWindow = () => {
         //mainWindow.loadURL('file://' + __dirname + '/index.html');
     });
 
+    //mainWindow.webContents.openDevTools();
+
     ipcMain.on('clearCache-msg', (event, arg) => {
         if(arg === 'clearCache') {
             session.clearStorageData(() => {

@@ -54,7 +54,7 @@ class GameWebview extends React.Component {
                 webview.openDevTools();
                 break;
             case 'startGambling-poker':
-                let pokerJS = fs.readFileSync(path.join(dirname, 'casino_poker.js'), 'utf-8');
+                let pokerJS = fs.readFileSync(path.join(dirname, 'js/plugins/casino_poker.js'), 'utf-8');
                 resolvePokerNavigateEvent = (e) => {
                     if(e.url.search(/casino\/game\/poker/ig) !== -1) {
                         setTimeout(function(){
@@ -80,7 +80,7 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-finish-load', resolvePokerFinishEvent);
                 break;
             case 'startGambling-slot':
-                let slotJS = fs.readFileSync(path.join(dirname, 'casino_slot.js'), 'utf-8');
+                let slotJS = fs.readFileSync(path.join(dirname, 'js/plugins/casino_slot.js'), 'utf-8');
                 resolveSlotNavigateEvent = (e) => {
                     if(e.url.search(/casino\/game\/slot/ig) !== -1) {
                         setTimeout(function(){
@@ -106,7 +106,7 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-finish-load', resolveSlotFinishEvent);
                 break;
             case 'startGambling-bingo':
-                let bingoJS = fs.readFileSync(path.join(dirname, 'casino_bingo.js'), 'utf-8');
+                let bingoJS = fs.readFileSync(path.join(dirname, 'js/plugins/casino_bingo.js'), 'utf-8');
                 resolveBingoNavigateEvent = (e) => {
                     if(e.url.search(/casino\/game\/bingo/ig) !== -1) {
                         setTimeout(function(){
@@ -132,7 +132,7 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-finish-load', resolveBingoFinishEvent);
                 break;
             case 'startHpDisplay':
-                let hpDisplayJS = fs.readFileSync(path.join(dirname, 'hp.js'), 'utf-8');
+                let hpDisplayJS = fs.readFileSync(path.join(dirname, 'js/plugins/hp.js'), 'utf-8');
                 resolveHpDisplayNavigateEvent = (e) => {
                     if(e.url.search(/raid\//ig) !== -1 || e.url.search(/raid_multi\//ig) !== -1) {
                         setTimeout(function(){
@@ -164,7 +164,7 @@ class GameWebview extends React.Component {
                         user: ${JSON.stringify(para)}
                     }
                 `;
-                let execJS = fs.readFileSync(path.join(dirname, 'test.js'), 'utf-8');
+                let execJS = fs.readFileSync(path.join(dirname, 'js/plugins/test.js'), 'utf-8');
                 console.log('执行！');
                 console.log(paraJS);
                 webview.executeJavaScript(paraJS);

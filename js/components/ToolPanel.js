@@ -1,7 +1,7 @@
 import React from 'react';
 import GameDataStore from '../stores/GameDataStore';
 import AppDispatcher from '../dispatcher/AppDispatcher';
-import {Button, Switch} from 'antd';
+import {Button, Switch, InputNumber} from 'antd';
 
 class ToolPanel extends React.Component {
     componentDidMount() {
@@ -74,10 +74,13 @@ class ToolPanel extends React.Component {
                     <p>bingo自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.bingoOnChange} /></p>
                     <hr />
                     <p>开启通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
-                    <p>&nbsp;&nbsp;AP/BP回满通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
-                    <p>&nbsp;&nbsp;巴哈姆特通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;AP/BP回满通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;巴哈通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
                     <hr />
                     <p>血量显示 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.hpDisplayOnChange} /></p>
+                    <hr />
+                    <p>游戏速率改变 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <div className="fps">&nbsp;&nbsp;&nbsp;&nbsp;改变游戏FPS至 &nbsp;&nbsp;&nbsp; <div><InputNumber disabled="true" min={12} max={300} defaultValue={60} size="small" /> FPS</div></div>
                     <hr />
                     <Button type="primary" size="small" onClick={this.execJS}>测试脚本</Button>
                 </div>
