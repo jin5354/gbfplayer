@@ -8,14 +8,10 @@ let notification = {
     bpMaxHandler(bp) {
         new Notification('Bpmax!', { body: `now bp = ${bp}`, icon: 'assets/icon.png' });
     },
-    init() {
+    init(options) {
         Notification.requestPermission();
         GameDataStore.addEventListener('ApMax', this.apMaxHandler);
         GameDataStore.addEventListener('BpMax', this.bpMaxHandler);
-    },
-    uninit() {
-        GameDataStore.removeEventListener('ApMax');
-        GameDataStore.removeEventListener('BpMax');
     }
 };
 

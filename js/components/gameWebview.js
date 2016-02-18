@@ -39,7 +39,10 @@ class GameWebview extends React.Component {
             resolveHpDisplayNavigateEvent,
             resolveHpDisplayFinishEvent,
             resolveBingoNavigateEvent,
-            resolveBingoFinishEvent;
+            resolveBingoFinishEvent,
+            resolveSpeedUpNavigateEvent,
+            resolveSpeedUpFinishEvent,
+            resolveSpeedUpEvent;
 
         WebviewCtrlStore.addEventListener('change', (event) => {
             switch(event) {
@@ -59,14 +62,14 @@ class GameWebview extends React.Component {
                 let pokerJS = fs.readFileSync(path.join(dirname, 'js/plugins/casino_poker.js'), 'utf-8');
                 resolvePokerNavigateEvent = (e) => {
                     if(e.url.search(/casino\/game\/poker/ig) !== -1) {
-                        setTimeout(function(){
+                        setTimeout(() => {
                             webview.executeJavaScript(pokerJS);
                         },5000);
                     }
                 };
                 resolvePokerFinishEvent = () => {
                     if(webview.getURL().search(/casino\/game\/poker/ig) !== -1) {
-                        setTimeout(function(){
+                        setTimeout(() => {
                             webview.executeJavaScript(pokerJS);
                         },3000);
                     }
@@ -85,14 +88,14 @@ class GameWebview extends React.Component {
                 let slotJS = fs.readFileSync(path.join(dirname, 'js/plugins/casino_slot.js'), 'utf-8');
                 resolveSlotNavigateEvent = (e) => {
                     if(e.url.search(/casino\/game\/slot/ig) !== -1) {
-                        setTimeout(function(){
+                        setTimeout(() => {
                             webview.executeJavaScript(slotJS);
                         },5000);
                     }
                 };
                 resolveSlotFinishEvent = () => {
                     if(webview.getURL().search(/casino\/game\/slot/ig) !== -1) {
-                        setTimeout(function(){
+                        setTimeout(() => {
                             webview.executeJavaScript(slotJS);
                         },3000);
                     }
@@ -111,14 +114,14 @@ class GameWebview extends React.Component {
                 let bingoJS = fs.readFileSync(path.join(dirname, 'js/plugins/casino_bingo.js'), 'utf-8');
                 resolveBingoNavigateEvent = (e) => {
                     if(e.url.search(/casino\/game\/bingo/ig) !== -1) {
-                        setTimeout(function(){
+                        setTimeout(() =>{
                             webview.executeJavaScript(bingoJS);
                         },5000);
                     }
                 };
                 resolveBingoFinishEvent = () => {
                     if(webview.getURL().search(/casino\/game\/bingo/ig) !== -1) {
-                        setTimeout(function(){
+                        setTimeout(() => {
                             webview.executeJavaScript(bingoJS);
                         },3000);
                     }
@@ -137,21 +140,21 @@ class GameWebview extends React.Component {
                 let hpDisplayJS = fs.readFileSync(path.join(dirname, 'js/plugins/hp.js'), 'utf-8');
                 resolveHpDisplayNavigateEvent = (e) => {
                     if(e.url.search(/raid\//ig) !== -1 || e.url.search(/raid_multi\//ig) !== -1) {
-                        setTimeout(function(){
+                        setTimeout(() => {
                             webview.executeJavaScript(hpDisplayJS);
                         },5000);
                     }
                 };
                 resolveHpDisplayFinishEvent = () => {
-                    if(webview.getURL().search(/raid\//ig) !== -1) {
-                        setTimeout(function(){
+                    if(webview.getURL().search(/raid\//ig) !== -1 || webview.getURL().search(/raid_multi\//ig) !== -1) {
+                        setTimeout(() => {
                             webview.executeJavaScript(hpDisplayJS);
                         },3000);
                     }
                 };
                 webview.addEventListener('did-navigate-in-page', resolveHpDisplayNavigateEvent);
                 webview.addEventListener('did-finish-load', resolveHpDisplayFinishEvent);
-                if(webview.getURL && webview.getURL().search(/raid\//ig) !== -1) {
+                if(webview.getURL && (webview.getURL().search(/raid\//ig) !== -1 || webview.getURL().search(/raid_multi\//ig) !== -1)) {
                     webview.executeJavaScript(hpDisplayJS);
                 }
                 break;
@@ -159,9 +162,33 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-navigate-in-page', resolveHpDisplayNavigateEvent);
                 webview.removeEventListener('did-finish-load', resolveHpDisplayFinishEvent);
                 break;
+            case 'startSpeedUp':
+                resolveSpeedUpNavigateEvent = () => {
+                    setTimeout(() => {
+                        webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                    }, 5000);
+                };
+                resolveSpeedUpFinishEvent = () => {
+                    setTimeout(() => {
+                        webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                    }, 3000);
+                };
+                resolveSpeedUpEvent = () => {
+                    webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                };
+                webview.addEventListener('did-navigate-in-page', resolveSpeedUpNavigateEvent);
+                webview.addEventListener('did-finish-load', resolveSpeedUpFinishEvent);
+                webview.addEventListener('did-get-response-details', resolveSpeedUpEvent);
+                webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                break;
+            case 'stopSpeedUp':
+                webview.removeEventListener('did-navigate-in-page', resolveSpeedUpNavigateEvent);
+                webview.removeEventListener('did-finish-load', resolveSpeedUpFinishEvent);
+                webview.removeEventListener('did-get-response-details', resolveSpeedUpEvent);
+                webview.executeJavaScript(`createjs.Ticker.setFPS(24);`);
+                break;
             case 'execJS':
                 let execJS = fs.readFileSync(path.join(dirname, 'js/plugins/test.js'), 'utf-8');
-                webview.executeJavaScript(paraJS);
                 webview.executeJavaScript(execJS);
             }
         });
