@@ -33,7 +33,7 @@ class DevPanel extends React.Component {
         return (
             <div id="DevPanel">
                 <div>
-                    <Button type="primary" size="small" onClick={this.openSelfDevTools}>打开DevTools</Button>
+                    <Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button>
                     <Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button>
                     <Button type="primary" size="small" onClick={this.clearCache}>清除缓存</Button>
                     <br /><br /><br /><br />

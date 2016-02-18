@@ -58,7 +58,7 @@ let parse = {
             _gameData.status = status;
             emitter.emit('StatusUpdate');
             if(_gameData.notiFlag.ap) {
-                if(_gameData.status.ap === _gameData.status.maxAp) {
+                if(Number(_gameData.status.ap) === Number(_gameData.status.maxAp)) {
                     emitter.emit('ApMax', _gameData.status.ap);
                     _gameData.notiFlag.ap = 0;
                 }else {
@@ -66,7 +66,7 @@ let parse = {
                 }
             }
             if(_gameData.notiFlag.bp) {
-                if(_gameData.status.bp === _gameData.status.maxBp) {
+                if(Number(_gameData.status.bp) === Number(_gameData.status.maxBp)) {
                     emitter.emit('BpMax', _gameData.status.bp);
                     _gameData.notiFlag.bp = 0;
                 }else {

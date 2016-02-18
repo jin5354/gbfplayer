@@ -1,5 +1,4 @@
 import React from 'react';
-import GameDataStore from '../stores/GameDataStore';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import {Button, Switch, InputNumber} from 'antd';
 

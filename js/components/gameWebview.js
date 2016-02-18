@@ -3,7 +3,6 @@ import {app} from 'remote';
 import fs from 'fs';
 import path from 'path';
 import WebviewCtrlStore from '../stores/WebviewCtrlStore';
-import GameDataStore from '../stores/GameDataStore';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
 class GameWebview extends React.Component {
@@ -20,11 +19,14 @@ class GameWebview extends React.Component {
         }
         `;
         
+        let dirname = app.getAppPath();
+        let preinitJS = fs.readFileSync(path.join(dirname, 'js/plugins/preinit.js'), 'utf-8');
+        let getInfoJS = fs.readFileSync(path.join(dirname, 'js/plugins/getInfo.js'), 'utf-8');
         webview.addEventListener('did-finish-load', () => {
             webview.insertCSS(css);
+            webview.executeJavaScript(preinitJS);
+            webview.executeJavaScript(getInfoJS);
         });
-
-        let dirname = app.getAppPath();
 
         webview.addEventListener('console-message', function(e) {
             console.log('Guest page logged a message:', e.message);
@@ -158,15 +160,7 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-finish-load', resolveHpDisplayFinishEvent);
                 break;
             case 'execJS':
-                let para = GameDataStore.getUser();
-                let paraJS = `
-                    window.gbfplayer = {
-                        user: ${JSON.stringify(para)}
-                    }
-                `;
                 let execJS = fs.readFileSync(path.join(dirname, 'js/plugins/test.js'), 'utf-8');
-                console.log('执行！');
-                console.log(paraJS);
                 webview.executeJavaScript(paraJS);
                 webview.executeJavaScript(execJS);
             }
@@ -194,7 +188,7 @@ class GameWebview extends React.Component {
     }
     render() {
         return (
-            <webview ref="gameWebview" disablewebsecurity src="http://gbf.game.mbga.jp/#mypage"></webview>
+            <webview ref="gameWebview" nodeintegration disablewebsecurity src="http://gbf.game.mbga.jp/#mypage"></webview>
             
         );
     }
