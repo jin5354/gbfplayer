@@ -1,7 +1,5 @@
 import React from 'react';
 import GameDataStore from '../stores/GameDataStore';
-import AppDispatcher from '../dispatcher/AppDispatcher';
-import {Button} from 'antd';
 
 class UserInfo extends React.Component {
     componentDidMount() {

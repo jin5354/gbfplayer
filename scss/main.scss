@@ -108,13 +108,29 @@
         padding: 0 20px;
 
         p {
-            margin-bottom: 5px;
+            margin: 4px 0;
         }
 
         #DevPanel,
         #ToolPanel {
             .ant-btn {
                 margin: 0 5px 5px;
+            }
+        }
+
+        #ToolPanel {
+
+            p {
+                display: flex;
+                width: 230px;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            hr {
+                border: none;
+                border-bottom: 1px solid #666;
+                margin: 10px 0;
             }
         }
 

@@ -33,12 +33,40 @@ class ToolPanel extends React.Component {
             });
         }
     }
+    hpDisplayOnChange(checked) {
+        if(checked) {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'startHpDisplay'
+            });
+        }else {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'stopHpDisplay'
+            });
+        }
+    }
+    execJS() {
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'execJS'
+        });
+    }
     render() {
         return (
             <div id="ToolPanel">
                 <div>
-                    <p>开启poker挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.pokerOnChange} /></p>
-                    <p>开启slot挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.slotOnChange} /></p>
+                    <p>poker自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.pokerOnChange} /></p>
+                    <p>slot自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.slotOnChange} /></p>
+                    <p>bingo自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <hr />
+                    <p>开启通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <p>&nbsp;&nbsp;AP/BP回满通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <p>&nbsp;&nbsp;巴哈姆特通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <hr />
+                    <p>血量显示 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.hpDisplayOnChange} /></p>
+                    <hr />
+                    <Button type="primary" size="small" onClick={this.execJS}>测试脚本</Button>
                 </div>
             </div>
         );

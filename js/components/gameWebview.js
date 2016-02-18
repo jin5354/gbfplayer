@@ -3,6 +3,8 @@ import {app} from 'remote';
 import fs from 'fs';
 import path from 'path';
 import WebviewCtrlStore from '../stores/WebviewCtrlStore';
+import GameDataStore from '../stores/GameDataStore';
+import AppDispatcher from '../dispatcher/AppDispatcher';
 
 class GameWebview extends React.Component {
 
@@ -13,7 +15,7 @@ class GameWebview extends React.Component {
         let css = `body {
             -webkit-font-smoothing: antialiased;
         }
-       ::-webkit-scrollbar  {
+        ::-webkit-scrollbar  {
             display: none;
         }
         `;
@@ -31,7 +33,9 @@ class GameWebview extends React.Component {
         let resolvePokerNavigateEvent,
             resolvePokerFinishEvent,
             resolveSlotNavigateEvent,
-            resolveSlotFinishEvent;
+            resolveSlotFinishEvent,
+            resolveHpDisplayNavigateEvent,
+            resolveHpDisplayFinishEvent;
 
         WebviewCtrlStore.addEventListener('change', (event) => {
             switch(event) {
@@ -85,7 +89,7 @@ class GameWebview extends React.Component {
                 resolveSlotFinishEvent = () => {
                     if(webview.getURL().search(/casino\/game\/slot/ig) !== -1) {
                         setTimeout(function(){
-                            webview.executeJavaScript(pokerJS);
+                            webview.executeJavaScript(slotJS);
                         },3000);
                     }
                 };
@@ -99,7 +103,60 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-navigate-in-page', resolveSlotNavigateEvent);
                 webview.removeEventListener('did-finish-load', resolveSlotFinishEvent);
                 break;
+            case 'startHpDisplay':
+                let hpDisplayJS = fs.readFileSync(path.join(dirname, 'hp.js'), 'utf-8');
+                resolveHpDisplayNavigateEvent = (e) => {
+                    if(e.url.search(/raid\//ig) !== -1 || e.url.search(/raid_multi\//ig) !== -1) {
+                        setTimeout(function(){
+                            webview.executeJavaScript(hpDisplayJS);
+                        },5000);
+                    }
+                };
+                resolveHpDisplayFinishEvent = () => {
+                    if(webview.getURL().search(/raid\//ig) !== -1) {
+                        setTimeout(function(){
+                            webview.executeJavaScript(hpDisplayJS);
+                        },3000);
+                    }
+                };
+                webview.addEventListener('did-navigate-in-page', resolveHpDisplayNavigateEvent);
+                webview.addEventListener('did-finish-load', resolveHpDisplayFinishEvent);
+                if(webview.getURL && webview.getURL().search(/raid\//ig) !== -1) {
+                    webview.executeJavaScript(hpDisplayJS);
+                }
+                break;
+            case 'stopHpDisplay-slot':
+                webview.removeEventListener('did-navigate-in-page', resolveHpDisplayNavigateEvent);
+                webview.removeEventListener('did-finish-load', resolveHpDisplayFinishEvent);
+                break;
+            case 'execJS':
+                let para = GameDataStore.getUser();
+                let paraJS = `
+                    window.gbfplayer = {
+                        user: ${JSON.stringify(para)}
+                    }
+                `;
+                let execJS = fs.readFileSync(path.join(dirname, 'test.js'), 'utf-8');
+                console.log('执行！');
+                console.log(paraJS);
+                webview.executeJavaScript(paraJS);
+                webview.executeJavaScript(execJS);
             }
+        });
+
+
+
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'startGambling-poker'
+        });
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'startGambling-slot'
+        });
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'startHpDisplay'
         });
                 
     }

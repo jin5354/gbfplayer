@@ -16,14 +16,7 @@ const tabContent = [
 
 class Tool extends React.Component {
     componentDidMount() {
-        AppDispatcher.dispatch({
-            type: 'gameWebviewCtrl',
-            msg: 'startGambling-poker'
-        });
-        AppDispatcher.dispatch({
-            type: 'gameWebviewCtrl',
-            msg: 'startGambling-slot'
-        });
+    
     }
     render() {
         return (

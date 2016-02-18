@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import url from 'url';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
 let emitter = new EventEmitter();
@@ -8,6 +9,7 @@ let _res = [];
 let _req = [];
 
 let _gameData = {
+    user: {},
     userInfo: {},
     status: {},
     notiFlag: {
@@ -17,6 +19,12 @@ let _gameData = {
 };
 
 let parse = {
+    user(data) {
+        if(data.url.search(/user\/content\/index/ig) !== -1) {
+            _gameData.user = url.parse(data.url, true).query;
+            emitter.emit('UserUpdate');
+        }
+    },
     userInfo(data) {
 
         let userInfo = {};
@@ -104,6 +112,7 @@ AppDispatcher.register((action) => {
 
                 // parse gamedata
                 
+                parse.user(action.data);
                 parse.userInfo(action.data);
                 parse.status(action.data);
 
@@ -124,11 +133,17 @@ export default {
     getReq() {
         return _req;
     },
+    getAllGameData() {
+        return _gameData;
+    },
     getUserInfo() {
         return _gameData.userInfo;
     },
     getStatus() {
         return _gameData.status;
+    },
+    getUser() {
+        return _gameData.user;
     },
     addEventListener(event, callback) {
         emitter.addListener(event, callback);
