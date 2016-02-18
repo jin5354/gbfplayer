@@ -35,7 +35,9 @@ class GameWebview extends React.Component {
             resolveSlotNavigateEvent,
             resolveSlotFinishEvent,
             resolveHpDisplayNavigateEvent,
-            resolveHpDisplayFinishEvent;
+            resolveHpDisplayFinishEvent,
+            resolveBingoNavigateEvent,
+            resolveBingoFinishEvent;
 
         WebviewCtrlStore.addEventListener('change', (event) => {
             switch(event) {
@@ -103,6 +105,32 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-navigate-in-page', resolveSlotNavigateEvent);
                 webview.removeEventListener('did-finish-load', resolveSlotFinishEvent);
                 break;
+            case 'startGambling-bingo':
+                let bingoJS = fs.readFileSync(path.join(dirname, 'casino_bingo.js'), 'utf-8');
+                resolveBingoNavigateEvent = (e) => {
+                    if(e.url.search(/casino\/game\/bingo/ig) !== -1) {
+                        setTimeout(function(){
+                            webview.executeJavaScript(bingoJS);
+                        },5000);
+                    }
+                };
+                resolveBingoFinishEvent = () => {
+                    if(webview.getURL().search(/casino\/game\/bingo/ig) !== -1) {
+                        setTimeout(function(){
+                            webview.executeJavaScript(bingoJS);
+                        },3000);
+                    }
+                };
+                webview.addEventListener('did-navigate-in-page', resolveBingoNavigateEvent);
+                webview.addEventListener('did-finish-load', resolveBingoFinishEvent);
+                if(webview.getURL && webview.getURL().search(/casino\/game\/bingo/ig) !== -1) {
+                    webview.executeJavaScript(bingoJS);
+                }
+                break;
+            case 'stopGambling-bingo':
+                webview.removeEventListener('did-navigate-in-page', resolveBingoNavigateEvent);
+                webview.removeEventListener('did-finish-load', resolveBingoFinishEvent);
+                break;
             case 'startHpDisplay':
                 let hpDisplayJS = fs.readFileSync(path.join(dirname, 'hp.js'), 'utf-8');
                 resolveHpDisplayNavigateEvent = (e) => {
@@ -125,7 +153,7 @@ class GameWebview extends React.Component {
                     webview.executeJavaScript(hpDisplayJS);
                 }
                 break;
-            case 'stopHpDisplay-slot':
+            case 'stopHpDisplay':
                 webview.removeEventListener('did-navigate-in-page', resolveHpDisplayNavigateEvent);
                 webview.removeEventListener('did-finish-load', resolveHpDisplayFinishEvent);
                 break;
@@ -145,7 +173,7 @@ class GameWebview extends React.Component {
         });
 
 
-
+        //pre init
         AppDispatcher.dispatch({
             type: 'gameWebviewCtrl',
             msg: 'startGambling-poker'
@@ -153,6 +181,10 @@ class GameWebview extends React.Component {
         AppDispatcher.dispatch({
             type: 'gameWebviewCtrl',
             msg: 'startGambling-slot'
+        });
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'startGambling-bingo'
         });
         AppDispatcher.dispatch({
             type: 'gameWebviewCtrl',

@@ -33,6 +33,19 @@ class ToolPanel extends React.Component {
             });
         }
     }
+    bingoOnChange(checked) {
+        if(checked) {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'startGambling-bingo'
+            });
+        }else {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'stopGambling-bingo'
+            });
+        }
+    }
     hpDisplayOnChange(checked) {
         if(checked) {
             AppDispatcher.dispatch({
@@ -58,7 +71,7 @@ class ToolPanel extends React.Component {
                 <div>
                     <p>poker自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.pokerOnChange} /></p>
                     <p>slot自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.slotOnChange} /></p>
-                    <p>bingo自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
+                    <p>bingo自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" onChange={this.bingoOnChange} /></p>
                     <hr />
                     <p>开启通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
                     <p>&nbsp;&nbsp;AP/BP回满通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked="true" /></p>
