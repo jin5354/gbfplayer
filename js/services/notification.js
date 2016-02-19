@@ -1,4 +1,3 @@
-import AppDispatcher from '../dispatcher/AppDispatcher';
 import GameDataStore from '../stores/GameDataStore';
 
 let notification = {
@@ -8,10 +7,20 @@ let notification = {
     bpMaxHandler(bp) {
         new Notification('Bpmax!', { body: `now bp = ${bp}`, icon: 'assets/icon.png' });
     },
-    init(options) {
-        Notification.requestPermission();
+    addApBpMaxEvent() {
         GameDataStore.addEventListener('ApMax', this.apMaxHandler);
         GameDataStore.addEventListener('BpMax', this.bpMaxHandler);
+    },
+    removeApBpMaxEvent() {
+        GameDataStore.removeEventListener('ApMax', this.apMaxHandler);
+        GameDataStore.removeEventListener('BpMax', this.bpMaxHandler);
+    },
+    init() {
+        Notification.requestPermission();
+        this.addApBpMaxEvent();
+    },
+    uninit() {
+        this.removeApBpMaxEvent();
     }
 };
 

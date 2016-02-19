@@ -1,6 +1,7 @@
 import React from 'react';
 import AppDispatcher from '../dispatcher/AppDispatcher';
-import {Button, Switch, InputNumber} from 'antd';
+import {Switch} from 'antd';
+import notification from '../services/notification';
 
 class ToolPanel extends React.Component {
     constructor(props) {
@@ -10,7 +11,6 @@ class ToolPanel extends React.Component {
             slot: true,
             bingo: true,
             noti: {
-                all: true,
                 ap_bp: true,
                 baha: true
             },
@@ -96,6 +96,13 @@ class ToolPanel extends React.Component {
             });
         }
     }
+    apbpNotiOnChange(checked) {
+        if(checked) {
+            notification.addApBpMaxEvent();
+        }else {
+            notification.removeApBpMaxEvent();
+        }
+    }
     execJS() {
         AppDispatcher.dispatch({
             type: 'gameWebviewCtrl',
@@ -110,22 +117,13 @@ class ToolPanel extends React.Component {
                     <p>slot自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.slot} onChange={this.slotOnChange} /></p>
                     <p>bingo自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.bingo} onChange={this.bingoOnChange} /></p>
                     <hr />
-                    {/*
-                    <p>开启通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.noti.all} /></p>
-                    <p>&nbsp;&nbsp;&nbsp;&nbsp;AP/BP回满通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.noti.ap_bp} /></p>
-                    <p>&nbsp;&nbsp;&nbsp;&nbsp;巴哈通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.noti.baha} /></p>
+                    <p>AP/BP回满通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.noti.ap_bp} onChange={this.apbpNotiOnChange} /></p>
+                    <p>巴哈通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.noti.baha} onChange={this.bahaNotiOnChange} /></p>
                     <hr />
-                    */}
                     <p>血量显示 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.hpDisplay} onChange={this.hpDisplayOnChange} /></p>
                     <hr />
                     <p>游戏加速 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.speed} onChange={this.speedOnChange}/></p>
-                    {/*
-                    <div className="fps">&nbsp;&nbsp;&nbsp;&nbsp;改变游戏FPS至 &nbsp;&nbsp;&nbsp; <div><InputNumber disabled="true" min={12} max={300} defaultValue={60} size="small" /> FPS</div></div>
-                    */}
                     <hr />
-                    {/*
-                    <Button type="primary" size="small" onClick={this.execJS}>测试脚本</Button>
-                    */}
                 </div>
             </div>
         );

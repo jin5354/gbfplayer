@@ -1,5 +1,4 @@
 import React from 'react';
-import GameDataStore from '../stores/GameDataStore';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import {Button, notification} from 'antd';
 import remote from 'remote';
@@ -9,7 +8,7 @@ class DevPanel extends React.Component {
     componentDidMount() {
         //GameDataStore.addEventListener('change', this.forceUpdate.bind(this));
     }
-    openDevTools(event) {
+    openDevTools() {
         AppDispatcher.dispatch({
             type: 'gameWebviewCtrl',
             msg: 'openDevTools'
@@ -33,11 +32,9 @@ class DevPanel extends React.Component {
         return (
             <div id="DevPanel">
                 <div>
-                    <Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button>
-                    <Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button>
-                    <Button type="primary" size="small" onClick={this.clearCache}>清除缓存</Button>
-                    <br /><br /><br /><br />
-                    <p>Build by electron + react.js + ant.design.</p>
+                    <p><Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.clearCache}>清除缓存</Button></p>
                 </div>
             </div>
         );
