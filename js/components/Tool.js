@@ -2,17 +2,11 @@ import React from 'react';
 import DevPanel from './DevPanel';
 import UserInfo from './UserInfo';
 import Status from './Status';
-import AppDispatcher from '../dispatcher/AppDispatcher';
 import ToolPanel from './ToolPanel';
+import Log from './Log';
 import '../../scss/antd.less';
-import {Tabs, Icon} from 'antd';
-const TabPane = Tabs.TabPane;
-
-const tabContent = [
-    <span><Icon type="solution" />Info</span>,
-    <span><Icon type="appstore" />Tool</span>,
-    <span><Icon type="setting" />Dev</span>
-];
+import {Icon, Collapse} from 'antd';
+const Panel = Collapse.Panel;
 
 class Tool extends React.Component {
     componentDidMount() {
@@ -21,19 +15,22 @@ class Tool extends React.Component {
     render() {
         return (
             <div id="tool">
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab={tabContent[0]} key="1">
+                <Collapse defaultActiveKey={['1']}>
+                    <Panel header="Info" key="1">
                         <UserInfo />
                         <br />
                         <Status />
-                    </TabPane>
-                    <TabPane tab={tabContent[1]} key="2">
+                    </Panel>
+                    <Panel header="Tool" key="2">
                         <ToolPanel />
-                    </TabPane>
-                    <TabPane tab={tabContent[2]} key="3">
+                    </Panel>
+                    <Panel header="Dev" key="3">
                         <DevPanel />
-                    </TabPane>
-                </Tabs>
+                    </Panel>
+                    <Panel header="Log" key="4">
+                        <Log />
+                    </Panel>
+                </Collapse>
             </div>
         );
     }

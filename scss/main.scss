@@ -4,6 +4,15 @@
     box-sizing: border-box;
 }
 
+body {
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar  {
+    display: none;
+}
+
 #react-root {
     overflow: hidden;
     width: 100vw;
@@ -89,72 +98,69 @@
 }
 
 #tool {
+    overflow: auto;
+    position: relative;
     width: 330px;
     height: 100%;
 
-    .ant-tabs-nav {
+    .ant-collapse {
+        background-color: #121211;
+        border-radius: 0;
+        border: none;
 
-        .ant-tabs-tab-inner {
-            padding: 5px 15px;
+        .ant-collapse-item {
+            border-top: 1px solid #666;
+
+            .ant-collapse-content {
+                background-color: #121211;
+            }
         }
+    }
+    .ant-collapse-header {
+        span {
+            color: #3499A7;
+        }
+        i {
+            color: #3499A7;
+        }
+    } 
 
-        .ant-tabs-tab {
-            margin-right: 20px;   
+    p {
+        margin: 5px 0;
+    }
+
+    #DevPanel,
+    #ToolPanel {
+        .ant-btn {
+            margin: 0 5px 5px;
         }
     }
 
-    .ant-tabs-content {
-        box-sizing: border-box;
-        padding: 0 20px;
+    #ToolPanel {
 
         p {
-            margin: 5px 0;
+            display: flex;
+            padding: 0 10px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        #DevPanel,
-        #ToolPanel {
-            .ant-btn {
-                margin: 0 5px 5px;
-            }
+        hr {
+            border: none;
+            border-bottom: 1px solid #666;
+            margin: 10px 0;
         }
 
-        #ToolPanel {
+        .fps {
+            display: flex;
+            padding: 0 10px;
+            justify-content: space-between;
+            align-items: center;
 
-            p {
-                display: flex;
-                padding: 0 10px;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            hr {
-                border: none;
-                border-bottom: 1px solid #666;
-                margin: 10px 0;
-            }
-
-            .fps {
-                display: flex;
-                padding: 0 10px;
-                justify-content: space-between;
-                align-items: center;
-
-                .ant-input-number-sm {
-                    width: 60px;
-                }
+            .ant-input-number-sm {
+                width: 60px;
             }
         }
-
-        #UserInfo,
-        #Status {
-
-            .wrap {
-
-                span {
-
-                }
-            }
-        }
-
     }
+
 }

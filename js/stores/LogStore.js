@@ -7,8 +7,9 @@ let _log = [];
 
 AppDispatcher.register((action) => {
     if(action.hasOwnProperty('log')) {
-        _log.push(action.log);
-        if(_log.length > 50) {
+        let now = new Date();
+        _log.push(now.toLocaleTimeString() + '  ' + action.log);
+        if(_log.length > 20) {
             _log.shift();
         }
         emitter.emit('log');

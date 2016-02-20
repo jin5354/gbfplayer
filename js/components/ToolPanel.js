@@ -159,7 +159,6 @@ class ToolPanel extends React.Component {
                     <hr />
                     <p>游戏加速 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.speed} onChange={this.speedOnChange}/></p>
                     <p>AutoPlay &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.autoplay} onChange={this.autoplayOnChange}/></p>
-                    <hr />
                 </div>
             </div>
         );

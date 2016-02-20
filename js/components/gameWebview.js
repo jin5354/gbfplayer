@@ -197,23 +197,19 @@ class GameWebview extends React.Component {
         let reg = () => {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startGambling-poker',
-                log: 'poker自动挂机启用。'
+                msg: 'startGambling-poker'
             });
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startGambling-slot',
-                log: 'slot自动挂机启用。'
+                msg: 'startGambling-slot'
             });
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startGambling-bingo',
-                log: 'bingo自动挂机启用。'
+                msg: 'startGambling-bingo'
             });
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startHpDisplay',
-                log: '血量显示启用。'
+                msg: 'startHpDisplay'
             });
         };
 

@@ -3,7 +3,6 @@ import GameDataStore from '../stores/GameDataStore';
 
 class UserInfo extends React.Component {
     componentDidMount() {
-        console.log('userinfo,panel1');
         GameDataStore.addEventListener('UserInfoUpdate', this.forceUpdate.bind(this));
     }
     renderUserInfo() {
