@@ -11,13 +11,19 @@ class ToolPanel extends React.Component {
             slot: true,
             bingo: true,
             noti: {
-                ap_bp: true,
-                baha: true
+                ap_bp: true
             },
             hpDisplay: true,
-            speed: false
+            speed: false,
+            autoplay: false
         };
         this.pokerOnChange = this.pokerOnChange.bind(this);
+        this.slotOnChange = this.slotOnChange.bind(this);
+        this.bingoOnChange = this.bingoOnChange.bind(this);
+        this.hpDisplayOnChange = this.hpDisplayOnChange.bind(this);
+        this.speedOnChange = this.speedOnChange.bind(this);
+        this.apbpNotiOnChange = this.apbpNotiOnChange.bind(this);
+        this.autoplayOnChange = this.autoplayOnChange.bind(this);
     }
     componentDidMount() {
 
@@ -26,12 +32,14 @@ class ToolPanel extends React.Component {
         if(checked) {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startGambling-poker'
+                msg: 'startGambling-poker',
+                log: 'poker自动挂机启用。'
             });
         }else {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'stopGambling-poker'
+                msg: 'stopGambling-poker',
+                log: 'poker自动挂机关闭。'
             });
         }
         this.setState({
@@ -42,12 +50,14 @@ class ToolPanel extends React.Component {
         if(checked) {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startGambling-slot'
+                msg: 'startGambling-slot',
+                log: 'slot自动挂机启用。'
             });
         }else {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'stopGambling-slot'
+                msg: 'stopGambling-slot',
+                log: 'slot自动挂机关闭。'
             });
         }
         this.setState({
@@ -58,12 +68,14 @@ class ToolPanel extends React.Component {
         if(checked) {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startGambling-bingo'
+                msg: 'startGambling-bingo',
+                log: 'bingo自动挂机启用。'
             });
         }else {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'stopGambling-bingo'
+                msg: 'stopGambling-bingo',
+                log: 'bingo自动挂机关闭。'
             });
         }
         this.setState({
@@ -74,27 +86,37 @@ class ToolPanel extends React.Component {
         if(checked) {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startHpDisplay'
+                msg: 'startHpDisplay',
+                log: '血量显示启用。'
             });
         }else {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'stopHpDisplay'
+                msg: 'stopHpDisplay',
+                log: '血量显示关闭。'
             });
         }
+        this.setState({
+            hpDisplay: checked
+        });
     }
     speedOnChange(checked) {
         if(checked) {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'startSpeedUp'
+                msg: 'startSpeedUp',
+                log: '游戏加速启用。'
             });
         }else {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
-                msg: 'stopSpeedUp'
+                msg: 'stopSpeedUp',
+                log: '游戏加速关闭。'
             });
         }
+        this.setState({
+            speed: checked
+        });
     }
     apbpNotiOnChange(checked) {
         if(checked) {
@@ -102,11 +124,26 @@ class ToolPanel extends React.Component {
         }else {
             notification.removeApBpMaxEvent();
         }
+        this.setState({
+            noti: {
+                ap_bp: checked
+            }
+        });
     }
-    execJS() {
-        AppDispatcher.dispatch({
-            type: 'gameWebviewCtrl',
-            msg: 'execJS'
+    autoplayOnChange(checked) {
+        if(checked) {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'startAutoplay'
+            });
+        }else {
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'stopAutoplay'
+            });
+        }
+        this.setState({
+            autoplay: checked
         });
     }
     render() {
@@ -118,11 +155,10 @@ class ToolPanel extends React.Component {
                     <p>bingo自动挂机 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.bingo} onChange={this.bingoOnChange} /></p>
                     <hr />
                     <p>AP/BP回满通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.noti.ap_bp} onChange={this.apbpNotiOnChange} /></p>
-                    <p>巴哈通知 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.noti.baha} onChange={this.bahaNotiOnChange} /></p>
-                    <hr />
                     <p>血量显示 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.hpDisplay} onChange={this.hpDisplayOnChange} /></p>
                     <hr />
                     <p>游戏加速 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.speed} onChange={this.speedOnChange}/></p>
+                    <p>AutoPlay &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.autoplay} onChange={this.autoplayOnChange}/></p>
                     <hr />
                 </div>
             </div>

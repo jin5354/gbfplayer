@@ -26,6 +26,8 @@ function exec(){
         $(".txt-hp-value.hide-hp").attr("class","txt-hp-value")
       }
 
+
+      if(window.stage){
       if(typeof(window.stage.gGameStatus)=="object"){
         if(typeof(window.stage.gGameStatus.boss)=="object"){
           if(typeof(window.stage.gGameStatus.boss.param)=="object"){
@@ -78,6 +80,7 @@ function exec(){
           }
         }
       }
+    }
   }
 }
 

@@ -6,7 +6,7 @@ import {ipcRenderer} from 'electron';
 
 class DevPanel extends React.Component {
     componentDidMount() {
-        //GameDataStore.addEventListener('change', this.forceUpdate.bind(this));
+
     }
     openDevTools() {
         AppDispatcher.dispatch({

@@ -38,6 +38,7 @@ let parse = {
             userInfo.guildName = el.querySelector('.txt-guild-name').innerHTML;
             userInfo.userName = el.querySelector('.btn-user-name').innerHTML;
             userInfo.rank = el.querySelector('.txt-rank-value').innerHTML;
+            userInfo.rankGauge = Number(el.querySelector('.prt-rank-gauge-inner').getAttribute('style').match(/\d+/i)[0]);
             userInfo.jobLv = el.querySelector('.txt-joblv-value').innerHTML;
             userInfo.lupi = el.querySelector('.prt-lupi').innerHTML;
             userInfo.stone = el.querySelector('.prt-stone').innerHTML;
