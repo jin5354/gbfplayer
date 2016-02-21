@@ -15,7 +15,7 @@ var options = {
             loader: 'babel-loader',
             exclude: /node_modules/,
             query: {stage: 0}
-        }, {
+        },{
             test: /\.scss$/,
             loader: 'style-loader!css-loader!sass-loader'
         },{
@@ -24,6 +24,9 @@ var options = {
         },{
             test: /\.(jpg|png)$/,
             loader: 'url-loader?limit=100000'
+        },{
+            test: /\.json$/,
+            loader: 'json-loader'
         }]
     },
 

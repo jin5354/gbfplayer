@@ -6,8 +6,8 @@ var AppDispatcher = require("../dispatcher/AppDispatcher");
 var port ;
 var _webContents;
 
-function MiniProxy() {
-    this.port = 9393;
+function MiniProxy(options) {
+    this.port = options.port || 9393;
     this.onServerError = function() {};
     this.onBeforeRequest = function(req) {
         _webContents.send('HTTPData', 'req', req);
@@ -200,7 +200,7 @@ MiniProxy.prototype.connectHandler = function(req, socket, head) {
         console.log("connectHandler error: " + e.message);
     }
 
-}
+};
 
 function _synReply(socket, code, reason, headers, cb) {
     try {
@@ -216,9 +216,11 @@ function _synReply(socket, code, reason, headers, cb) {
 }
 
 module.exports = {
-    'setWebContents': function(webContents) {
+    'init': function(webContents, port) {
         _webContents = webContents;
-        var proxy = new MiniProxy();
+        var proxy = new MiniProxy({
+            port: port
+        });
         proxy.start();
     }
 };

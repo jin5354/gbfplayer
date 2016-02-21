@@ -5,7 +5,7 @@ import Status from './Status';
 import ToolPanel from './ToolPanel';
 import Log from './Log';
 import '../../scss/antd.less';
-import {Icon, Collapse} from 'antd';
+import {Collapse} from 'antd';
 const Panel = Collapse.Panel;
 
 class Tool extends React.Component {

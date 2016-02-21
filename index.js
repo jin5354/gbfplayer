@@ -3,6 +3,7 @@
 const electron = require('electron');
 const proxy = require('./js/services/proxy');
 const ipcMain = require('electron').ipcMain;
+const config = require('./config');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -18,7 +19,7 @@ let createWindow = () => {
 
     let session = mainWindow.webContents.session;
 
-    proxy.setWebContents(mainWindow.webContents);
+    proxy.init(mainWindow.webContents, config.proxy.port);
     
     // set iphone UA
     session.webRequest.onBeforeSendHeaders(function(details, callback) {
@@ -32,7 +33,7 @@ let createWindow = () => {
     
     //set Proxy
     session.setProxy({
-        proxyRules: 'http=127.0.0.1:9393;https=127.0.0.1:9393'
+        proxyRules: `http=127.0.0.1:${config.proxy.port};https=127.0.0.1:${config.proxy.port}`
     }, () => {
         mainWindow.loadURL('http://localhost:3000');
         //mainWindow.loadURL('file://' + __dirname + '/index.html');

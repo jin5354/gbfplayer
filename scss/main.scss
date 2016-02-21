@@ -134,16 +134,15 @@ body {
         .ant-btn {
             margin: 0 5px 5px;
         }
-    }
-
-    #ToolPanel {
-
         p {
             display: flex;
             padding: 0 10px;
             justify-content: space-between;
             align-items: center;
         }
+    }
+
+    #ToolPanel {
 
         hr {
             border: none;
@@ -159,6 +158,22 @@ body {
 
             .ant-input-number-sm {
                 width: 60px;
+            }
+        }
+    }
+
+    #DevPanel {
+        .port {
+            span {
+                display: flex;
+                align-items: center;
+            }
+            input {
+                width: 50px;
+                outline-color: #3499A7;
+            }
+            .ant-btn {
+                margin: 0 0 0 5px;
             }
         }
     }
