@@ -12,8 +12,8 @@ class Status extends React.Component {
         return (
             <div id="Status">
                 <p>状态</p>
-                <p>ap: {this.renderStatus().ap || 0}/{this.renderStatus().maxAp || ''} &nbsp;&nbsp;&nbsp; remain: {this.renderStatus().apRemainTime || ''}</p>
-                <p>bp: {this.renderStatus().bp || 0}/{this.renderStatus().maxBp || ''} &nbsp;&nbsp;&nbsp; remain: {this.renderStatus().bpRemainTime || ''}</p>
+                <p><span className='ap'>AP: {this.renderStatus().ap || 0}/{this.renderStatus().maxAp || ''}</span> &nbsp;&nbsp;&nbsp; remain: {this.renderStatus().apRemainTime || ''}</p>
+                <p><span className='bp'>BP: {this.renderStatus().bp || 0}/{this.renderStatus().maxBp || ''}</span> &nbsp;&nbsp;&nbsp; remain: {this.renderStatus().bpRemainTime || ''}</p>
             </div>
         );
     }

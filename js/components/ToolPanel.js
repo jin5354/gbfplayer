@@ -121,8 +121,14 @@ class ToolPanel extends React.Component {
     apbpNotiOnChange(checked) {
         if(checked) {
             notification.addApBpMaxEvent();
+            AppDispatcher.dispatch({
+                log: 'AP/BP回满通知启用。'
+            });
         }else {
             notification.removeApBpMaxEvent();
+            AppDispatcher.dispatch({
+                log: 'AP/BP回满通知禁用。'
+            });
         }
         this.setState({
             noti: {
@@ -158,7 +164,9 @@ class ToolPanel extends React.Component {
                     <p>血量显示 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.hpDisplay} onChange={this.hpDisplayOnChange} /></p>
                     <hr />
                     <p>游戏加速 &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.speed} onChange={this.speedOnChange}/></p>
+                    {/*
                     <p>AutoPlay &nbsp;&nbsp;&nbsp; <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={this.state.autoplay} onChange={this.autoplayOnChange}/></p>
+                    */}
                 </div>
             </div>
         );

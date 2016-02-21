@@ -59,6 +59,7 @@ class DevPanel extends React.Component {
             <div id="DevPanel">
                 <div>
                     <p className="port">代理端口  <span><input value={this.state.proxyPort} onChange={this.proxyPortOnChange} /><Button type="primary" size="small" onClick={this.setProxyPort}>确定</Button></span></p>
+                    <hr />
                     <p><Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.clearCache}>清除全部缓存</Button></p>

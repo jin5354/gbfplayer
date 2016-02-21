@@ -12,6 +12,9 @@ body {
 ::-webkit-scrollbar  {
     display: none;
 }
+::selection {
+  color: #fff; background: #3499A7;
+} 
 
 #react-root {
     overflow: hidden;
@@ -140,15 +143,14 @@ body {
             justify-content: space-between;
             align-items: center;
         }
-    }
-
-    #ToolPanel {
-
         hr {
             border: none;
             border-bottom: 1px solid #666;
             margin: 10px 0;
         }
+    }
+
+    #ToolPanel {
 
         .fps {
             display: flex;
@@ -178,4 +180,31 @@ body {
         }
     }
 
+    #Status {
+        .ap {
+            color: #81e558;
+        }
+        .bp {
+            color: #c73434;
+        }
+    }
+    
+    #UserInfo {
+        .rank {
+            display: flex;
+            align-items: center;
+        }
+        .ant-progress-line-wrap {
+            width: 70px;
+
+            .ant-progress-line-inner {
+                position: relative;
+                bottom: 1px;
+
+                .ant-progress-line-bg {
+                    background-color: rgb(255,180,22);
+                }
+            }
+        }
+    }
 }
