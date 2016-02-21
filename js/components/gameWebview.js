@@ -179,7 +179,9 @@ class GameWebview extends React.Component {
                 webview.addEventListener('did-navigate-in-page', resolveSpeedUpNavigateEvent);
                 webview.addEventListener('did-finish-load', resolveSpeedUpFinishEvent);
                 webview.addEventListener('did-get-response-details', resolveSpeedUpEvent);
-                webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                if(webview.executeJavaScript) {
+                    webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                }
                 break;
             case 'stopSpeedUp':
                 webview.removeEventListener('did-navigate-in-page', resolveSpeedUpNavigateEvent);
@@ -210,6 +212,10 @@ class GameWebview extends React.Component {
             AppDispatcher.dispatch({
                 type: 'gameWebviewCtrl',
                 msg: 'startHpDisplay'
+            });
+            AppDispatcher.dispatch({
+                type: 'gameWebviewCtrl',
+                msg: 'startSpeedUp'
             });
         };
 

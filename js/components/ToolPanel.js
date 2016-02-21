@@ -14,7 +14,7 @@ class ToolPanel extends React.Component {
                 ap_bp: true
             },
             hpDisplay: true,
-            speed: false,
+            speed: true,
             autoplay: false
         };
         this.pokerOnChange = this.pokerOnChange.bind(this);
