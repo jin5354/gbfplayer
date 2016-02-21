@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron index.js",
     "build": "./node_modules/.bin/webpack --progress --watch",
-    "watch": "browser-sync start --server --files='index.html,build/bundle.js'"
+    "watch": "browser-sync start --server --files='index.html,build/bundle.js'",
+    "debug": "electron --debug-brk=5858 index.js"
   },
   "author": "jin5354",
   "license": "ISC",
@@ -31,6 +32,7 @@
     "jsonfile": "^2.2.3",
     "less": "^2.6.0",
     "less-loader": "^2.2.2",
+    "node-inspector": "^0.12.6",
     "node-sass": "^3.4.2",
     "request": "^2.69.0",
     "sass-loader": "^3.1.2",

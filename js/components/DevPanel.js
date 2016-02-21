@@ -1,12 +1,12 @@
 import React from 'react';
 import {app} from 'remote';
 import AppDispatcher from '../dispatcher/AppDispatcher';
-import {Button, message} from 'antd';
+import {Button, message, Select} from 'antd';
 import remote from 'remote';
 import path from 'path';
 import jsonfile from 'jsonfile';
 import {ipcRenderer} from 'electron';
-import config from '../../config.json';
+import config from 'config';
 
 let dirname = app.getAppPath();
 
@@ -14,10 +14,9 @@ class DevPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            proxyPort: config.proxy.port
+            proxy: config.proxy,
+            agent: config.agent
         };
-        this.proxyPortOnChange = this.proxyPortOnChange.bind(this);
-        this.setProxyPort = this.setProxyPort.bind(this);
     }
     componentDidMount() {
         ipcRenderer.on('clearCache-reply', function(arg, msg) {
@@ -40,25 +39,78 @@ class DevPanel extends React.Component {
     }
     proxyPortOnChange(event) {
         this.setState({
-            proxyPort: event.target.value
+            proxy: {
+                port: event.target.value
+            }
         });
     }
     setProxyPort() {
-        jsonfile.writeFile(path.join(dirname, 'config.json'), {
-            proxy: {
-                port: this.state.proxyPort
-            }
-        }, {
+        config.proxy.port = this.state.proxy.port;
+        jsonfile.writeFile(path.join(dirname, 'config.json'), config, {
             spaces: 4
         }, () => {
             message.success('修改成功，重启程序后生效', 1.5);
+            AppDispatcher.dispatch({
+                log: `成功设定APP代理端口为${config.proxy.port}。`
+            });
         });
+    }
+    agentTypeOnChange(value) {
+        this.setState({
+            agent: {
+                type: value
+            }
+        });
+        this.forceUpdate.bind(this);
+    }
+    agentHostOnChange(event) {
+        this.setState({
+            agent: {
+                host: event.target.value
+            }
+        });
+    }
+    agentPortOnChange(event) {
+        this.setState({
+            agent: {
+                port: event.target.value
+            }
+        });
+    }
+    setAgent() {
+        config.agent = this.state.agent;
+        if(!config.agent.host) {config.agent.host = '127.0.0.1';}
+        if(!config.agent.port) {config.agent.port = 1080;}
+        jsonfile.writeFile(path.join(dirname, 'config.json'), config, {
+            spaces: 4
+        }, () => {
+            message.success('修改成功，重启程序后生效', 1.5);
+            AppDispatcher.dispatch({
+                log: '成功设定代理。'
+            });
+        });
+    }
+    renderAgentSetting() {
+        console.log(this.state.agent);
+        if(this.state.agent.type != '0') {
+            return (<p className="agent-setting">Host: <input value={this.state.agent.host || '127.0.0.1'} onChange={this.agentHostOnChange.bind(this)} /> Port: <input value={this.state.agent.port || '1080'} onChange={this.agentPortOnChange.bind(this)} /></p>);
+        }
     }
     render() {
         return (
             <div id="DevPanel">
                 <div>
-                    <p className="port">代理端口  <span><input value={this.state.proxyPort} onChange={this.proxyPortOnChange} /><Button type="primary" size="small" onClick={this.setProxyPort}>确定</Button></span></p>
+                    <p className="port">APP代理端口  <span><input value={this.state.proxy.port} onChange={this.proxyPortOnChange.bind(this)} /><Button type="primary" size="small" onClick={this.setProxyPort.bind(this)}>确定</Button></span></p>
+                    <p className="agent">网页代理 
+                        <span>
+                            <Select defaultValue={this.state.agent.type} style={{ width: 100 }} onChange={this.agentTypeOnChange.bind(this)}>
+                                <Option value="0">不使用代理</Option>
+                                <Option value="1">SOCKS5</Option>
+                            </Select>
+                            <Button type="primary" size="small" onClick={this.setAgent.bind(this)}>确定</Button>
+                        </span>
+                    </p>
+                    {this.renderAgentSetting()}
                     <hr />
                     <p><Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button></p>

@@ -3,10 +3,14 @@
 const electron = require('electron');
 const proxy = require('./js/services/proxy');
 const ipcMain = require('electron').ipcMain;
-const config = require('./config');
+const config = require('./config.json');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+
+app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${config.proxy.port}`);
+app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1');
 
 let mainWindow;
 
@@ -17,9 +21,12 @@ let createWindow = () => {
         'height': 568
     });
 
-    let session = mainWindow.webContents.session;
+    proxy.init({
+        webContents: mainWindow.webContents,
+        port: config.proxy.port
+    });
 
-    proxy.init(mainWindow.webContents, config.proxy.port);
+    let session = mainWindow.webContents.session;
     
     // set iphone UA
     session.webRequest.onBeforeSendHeaders(function(details, callback) {
@@ -32,19 +39,15 @@ let createWindow = () => {
     mainWindow.setMaximizable(false);
     
     //set Proxy
-    session.setProxy({
-        proxyRules: `http=127.0.0.1:${config.proxy.port};https=127.0.0.1:${config.proxy.port}`
-    }, () => {
-        mainWindow.loadURL('http://localhost:3000');
-        //mainWindow.loadURL('file://' + __dirname + '/index.html');
-    });
-
+    
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
+    
     //mainWindow.webContents.openDevTools();
 
     ipcMain.on('clearCache-msg', (event, arg) => {
         if(arg === 'clearCache') {
             session.clearStorageData(() => {
-                event.sender.send('clearCache-reply', '缓存清除完毕！');
+                event.sender.send('clearCache-reply', '缓存清除完毕！请重新打开程序。');
             });
         }
     });

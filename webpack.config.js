@@ -12,8 +12,8 @@ var options = {
     module: {
         loaders: [{
             test: /\.js$/,
-            loader: 'babel-loader',
             exclude: /node_modules/,
+            loader: 'babel-loader',
             query: {stage: 0}
         },{
             test: /\.scss$/,
@@ -24,14 +24,13 @@ var options = {
         },{
             test: /\.(jpg|png)$/,
             loader: 'url-loader?limit=100000'
-        },{
-            test: /\.json$/,
-            loader: 'json-loader'
         }]
     },
-
     node: {
         __dirname: true
+    },
+    externals: {
+        'config': 'config'
     }
 };
 
