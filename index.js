@@ -16,10 +16,17 @@ let mainWindow;
 
 let createWindow = () => {
 
-    mainWindow = new BrowserWindow({
-        'width': 650,
-        'height': 568
-    });
+    if(process.platform == 'win32') {
+        mainWindow = new BrowserWindow({
+            'width': 666,
+            'height': 568
+        });
+    }else {
+        mainWindow = new BrowserWindow({
+            'width': 650,
+            'height': 568
+        });
+    }
 
     proxy.init({
         webContents: mainWindow.webContents,
@@ -52,7 +59,11 @@ let createWindow = () => {
 
     ipcMain.on('switch-window-msg', function() {
         if(mainWindow.getSize()[0] === 650) {
-            mainWindow.setSize(320, 568);
+            if(process.platform == 'win32') {
+                mainWindow.setSize(336, 568);
+            }else {
+                mainWindow.setSize(320, 568);
+            }
         }else {
             mainWindow.setSize(650, 568);
         }
