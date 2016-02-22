@@ -34,7 +34,6 @@
     "less-loader": "^2.2.2",
     "node-inspector": "^0.12.6",
     "node-sass": "^3.4.2",
-    "request": "^2.69.0",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
