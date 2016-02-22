@@ -32,7 +32,7 @@ let requestRemote = (requestOptions, req, res, proxy) => {
             'headers': remoteResponse.headers,
             'content-type': remoteResponse.headers['content-type'],
             'statusCode': remoteResponse.statusCode,
-            'host': remoteResponse.socket._host,
+            'host': remoteResponse.socket._httpMessage._headers.host,
             'path': remoteResponse.socket._httpMessage.path,
             'httpMessage': remoteResponse.socket._httpMessage
         };
