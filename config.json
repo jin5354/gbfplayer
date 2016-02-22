@@ -1,10 +1,6 @@
 {
-    "proxy": {
-        "port": "7777"
-    },
-    "agent": {
-        "type": "0",
-        "host": "127.0.0.1",
-        "port": 1080
-    }
+    "proxyPort": "7777",
+    "agentType": "0",
+    "agentHost": "127.0.0.1",
+    "agentPort": "1080"
 }

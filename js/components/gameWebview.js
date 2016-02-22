@@ -165,22 +165,22 @@ class GameWebview extends React.Component {
             case 'startSpeedUp':
                 resolveSpeedUpNavigateEvent = () => {
                     setTimeout(() => {
-                        webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                        webview.executeJavaScript(`if(window.createjs){createjs.Ticker.setFPS(60);}`);
                     }, 5000);
                 };
                 resolveSpeedUpFinishEvent = () => {
                     setTimeout(() => {
-                        webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                        webview.executeJavaScript(`if(window.createjs){createjs.Ticker.setFPS(60);}`);
                     }, 3000);
                 };
                 resolveSpeedUpEvent = () => {
-                    webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                    webview.executeJavaScript(`if(window.createjs){createjs.Ticker.setFPS(60);}`);
                 };
                 webview.addEventListener('did-navigate-in-page', resolveSpeedUpNavigateEvent);
                 webview.addEventListener('did-finish-load', resolveSpeedUpFinishEvent);
                 webview.addEventListener('did-get-response-details', resolveSpeedUpEvent);
                 if(webview.executeJavaScript) {
-                    webview.executeJavaScript(`createjs.Ticker.setFPS(60);`);
+                    webview.executeJavaScript(`if(window.createjs){createjs.Ticker.setFPS(60);}`);
                 }
                 break;
             case 'stopSpeedUp':

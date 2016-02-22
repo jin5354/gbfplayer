@@ -9,16 +9,29 @@ class UserInfo extends React.Component {
         GameDataStore.addEventListener('UserInfoUpdate', this.forceUpdate.bind(this));
     }
     renderUserInfo() {
-        return GameDataStore.getUserInfo();
+        let userInfo =  GameDataStore.getUserInfo();
+        if(!userInfo.waiting) {
+            return (
+                <div>
+                    <div className="rank">{userInfo.userName || ''} &nbsp;&nbsp;&nbsp; Lv.{userInfo.rank || '' } &nbsp;&nbsp; <ProgressLine percent={userInfo.rankGauge} strokeWidth={5} showInfo={false} status="active" /> &nbsp;&nbsp;&nbsp;{userInfo.rankGauge}%</div>
+                    <p>lupi: {userInfo.lupi || ''} &nbsp;&nbsp;&nbsp; stone: {userInfo.stone || ''} &nbsp;&nbsp;&nbsp; rowStone: {userInfo.rowStone || ''}</p>
+                    <p>jp: {userInfo.jp || ''} &nbsp;&nbsp;&nbsp; jobLv: {userInfo.jobLv || ''}</p>
+                    <p>power: {userInfo.power || ''} &nbsp;&nbsp;&nbsp; powerLv: {userInfo.powerLv || ''}</p>
+                </div>
+            );
+        }else {
+            return (
+                <div>
+                    <p>等待游戏数据..</p>
+                </div>
+            );
+        }
     }
     render() {
         return (
             <div id="UserInfo">
                 <p>个人信息</p>
-                <div className="rank">{this.renderUserInfo().userName || ''} &nbsp;&nbsp;&nbsp; Lv.{this.renderUserInfo().rank || '' } &nbsp;&nbsp; <ProgressLine percent={this.renderUserInfo().rankGauge} strokeWidth={5} showInfo={false} status="active" /> &nbsp;&nbsp;&nbsp;{this.renderUserInfo().rankGauge}%</div>
-                <p>lupi: {this.renderUserInfo().lupi || ''} &nbsp;&nbsp;&nbsp; stone: {this.renderUserInfo().stone || ''} &nbsp;&nbsp;&nbsp; rowStone: {this.renderUserInfo().rowStone || ''}</p>
-                <p>jp: {this.renderUserInfo().jp || ''} &nbsp;&nbsp;&nbsp; jobLv: {this.renderUserInfo().jobLv || ''}</p>
-                <p>power: {this.renderUserInfo().power || ''} &nbsp;&nbsp;&nbsp; powerLv: {this.renderUserInfo().powerLv || ''}</p>
+                {this.renderUserInfo()}
             </div>
         );
     }

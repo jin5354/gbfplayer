@@ -13,10 +13,8 @@ let dirname = app.getAppPath();
 class DevPanel extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            proxy: config.proxy,
-            agent: config.agent
-        };
+        this.state = config;
+        this.renderAgentSetting = this.renderAgentSetting.bind(this);
     }
     componentDidMount() {
         ipcRenderer.on('clearCache-reply', function(arg, msg) {
@@ -39,48 +37,42 @@ class DevPanel extends React.Component {
     }
     proxyPortOnChange(event) {
         this.setState({
-            proxy: {
-                port: event.target.value
-            }
+            proxyPort: event.target.value
         });
     }
     setProxyPort() {
-        config.proxy.port = this.state.proxy.port;
+        config.proxyPort = this.state.proxyPort;
         jsonfile.writeFile(path.join(dirname, 'config.json'), config, {
             spaces: 4
         }, () => {
             message.success('修改成功，重启程序后生效', 1.5);
             AppDispatcher.dispatch({
-                log: `成功设定APP代理端口为${config.proxy.port}。`
+                log: `成功设定APP代理端口为${config.proxyPort}。`
             });
         });
     }
     agentTypeOnChange(value) {
+        config.agentType = value;
         this.setState({
-            agent: {
-                type: value
-            }
+            agentType: value
         });
         this.forceUpdate.bind(this);
     }
     agentHostOnChange(event) {
+        config.agentHost = event.target.value;
         this.setState({
-            agent: {
-                host: event.target.value
-            }
+            agentHost: event.target.value
         });
     }
     agentPortOnChange(event) {
+        config.agentPort = event.target.value;
         this.setState({
-            agent: {
-                port: event.target.value
-            }
+            agentPort: event.target.value
         });
     }
     setAgent() {
-        config.agent = this.state.agent;
-        if(!config.agent.host) {config.agent.host = '127.0.0.1';}
-        if(!config.agent.port) {config.agent.port = 1080;}
+        if(!config.agentHost) {config.agentHost = '127.0.0.1';}
+        if(!config.agentPort) {config.agentPort = 1080;}
         jsonfile.writeFile(path.join(dirname, 'config.json'), config, {
             spaces: 4
         }, () => {
@@ -92,18 +84,18 @@ class DevPanel extends React.Component {
     }
     renderAgentSetting() {
         console.log(this.state.agent);
-        if(this.state.agent.type != '0') {
-            return (<p className="agent-setting">Host: <input value={this.state.agent.host || '127.0.0.1'} onChange={this.agentHostOnChange.bind(this)} /> Port: <input value={this.state.agent.port || '1080'} onChange={this.agentPortOnChange.bind(this)} /></p>);
+        if(this.state.agentType != '0') {
+            return (<p className="agent-setting">Host: <input value={this.state.agentHost} onChange={this.agentHostOnChange.bind(this)} /> Port: <input value={this.state.agentPort} onChange={this.agentPortOnChange.bind(this)} /></p>);
         }
     }
     render() {
         return (
             <div id="DevPanel">
                 <div>
-                    <p className="port">APP代理端口  <span><input value={this.state.proxy.port} onChange={this.proxyPortOnChange.bind(this)} /><Button type="primary" size="small" onClick={this.setProxyPort.bind(this)}>确定</Button></span></p>
+                    <p className="port">APP代理端口  <span><input value={this.state.proxyPort} onChange={this.proxyPortOnChange.bind(this)} /><Button type="primary" size="small" onClick={this.setProxyPort.bind(this)}>确定</Button></span></p>
                     <p className="agent">网页代理 
                         <span>
-                            <Select defaultValue={this.state.agent.type} style={{ width: 100 }} onChange={this.agentTypeOnChange.bind(this)}>
+                            <Select defaultValue={this.state.agentType} style={{ width: 100 }} onChange={this.agentTypeOnChange.bind(this)}>
                                 <Option value="0">不使用代理</Option>
                                 <Option value="1">SOCKS5</Option>
                             </Select>

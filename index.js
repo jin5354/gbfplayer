@@ -8,7 +8,7 @@ const config = require('./config.json');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${config.proxy.port}`);
+app.commandLine.appendSwitch('proxy-server', `127.0.0.1:${config.proxyPort}`);
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1');
 
@@ -23,7 +23,7 @@ let createWindow = () => {
 
     proxy.init({
         webContents: mainWindow.webContents,
-        port: config.proxy.port
+        port: config.proxyPort
     });
 
     let session = mainWindow.webContents.session;
@@ -37,8 +37,6 @@ let createWindow = () => {
     mainWindow.setResizable(false);
     mainWindow.setAutoHideMenuBar(true);
     mainWindow.setMaximizable(false);
-    
-    //set Proxy
     
     mainWindow.loadURL('file://' + __dirname + '/index.html');
     

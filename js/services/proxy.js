@@ -73,7 +73,7 @@ let requestRemote = (requestOptions, req, res, proxy) => {
     };
 
     let remoteRequest;
-    if(config.agent.type == '1') {
+    if(config.agentType == '1') {
         remoteRequest= shttp.request(requestOptions, resolveRes);
     }else {
         remoteRequest= http.request(requestOptions, resolveRes);
@@ -133,6 +133,8 @@ class Proxy {
                 headers: req.headers
             };
 
+            requestOptions.url = requestOptions.host + requestOptions.path;
+
             //check url
             if (requestOptions.host == '127.0.0.1' && requestOptions.port == _port) {
                 res.writeHead(200, {
@@ -170,11 +172,11 @@ class Proxy {
                 port: req.url.split(':')[1] || 443
             };
 
-            if(config.agent.type == '1') {
+            if(config.agentType == '1') {
                 let socksOptions = {
                     proxy: {
-                        ipaddress: config.agent.host,
-                        port: config.agent.port,
+                        ipaddress: config.agentHost,
+                        port: config.agentPort,
                         type: 5
                     },
                     target: {

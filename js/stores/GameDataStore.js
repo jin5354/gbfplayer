@@ -10,8 +10,12 @@ let _req = [];
 
 let _gameData = {
     user: {},
-    userInfo: {},
-    status: {},
+    userInfo: {
+        waiting: true
+    },
+    status: {
+        waiting: true
+    },
     notiFlag: {
         ap: 1,
         bp: 1
@@ -27,7 +31,9 @@ let parse = {
     },
     userInfo(data) {
 
-        let userInfo = {};
+        let userInfo = {
+            waiting: false
+        };
         // gbf.game.mbga.jp/user/content/index
         if(data.url.search(/user\/content\/index/ig) !== -1) {
             data.body.data = decodeURIComponent(data.body.data);
@@ -35,7 +41,6 @@ let parse = {
             let el = document.createElement('html');
             el.innerHTML = data.body.data;
 
-            userInfo.guildName = el.querySelector('.txt-guild-name').innerHTML;
             userInfo.userName = el.querySelector('.btn-user-name').innerHTML;
             userInfo.rank = el.querySelector('.txt-rank-value').innerHTML;
             userInfo.rankGauge = Number(el.querySelector('.prt-rank-gauge-inner').getAttribute('style').match(/\d+/i)[0]);
@@ -53,7 +58,9 @@ let parse = {
     },
     status(data) {
 
-        let status = {};
+        let status = {
+            waiting: false
+        };
 
         let updateStatus = () => {
             _gameData.status = status;
@@ -119,8 +126,6 @@ AppDispatcher.register((action) => {
 
                 console.log(action.data);
 
-            }else if (action.msg === 'req') {
-                
             }
             emitter.emit('HTTPDataUpdate');
         }

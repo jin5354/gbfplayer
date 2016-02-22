@@ -15,7 +15,8 @@ let init = () => {
             AppDispatcher.dispatch({
                 type: 'HTTPData',
                 msg: 'req',
-                data: data
+                data: data,
+                log: `GET ${data.url}`
             });
         }
 
