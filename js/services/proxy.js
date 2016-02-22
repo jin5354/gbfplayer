@@ -74,6 +74,8 @@ let requestRemote = (requestOptions, req, res, proxy) => {
 
     let remoteRequest;
     if(config.agentType == '1') {
+        requestOptions.socksHost = config.agentHost;
+        requestOptions.socksPort = config.agentPort;
         remoteRequest= shttp.request(requestOptions, resolveRes);
     }else {
         remoteRequest= http.request(requestOptions, resolveRes);
