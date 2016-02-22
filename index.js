@@ -19,12 +19,14 @@ let createWindow = () => {
     if(process.platform == 'win32') {
         mainWindow = new BrowserWindow({
             'width': 666,
-            'height': 568
+            'height': 568,
+            'icon': './images/icons/gbfplayer.png'
         });
     }else {
         mainWindow = new BrowserWindow({
             'width': 650,
-            'height': 568
+            'height': 568,
+            'icon': './images/icons/gbfplayer.png'
         });
     }
 
