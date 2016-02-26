@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "antd": "^0.12.1",
+    "babel-polyfill": "^6.5.0",
     "electron-prebuilt": "^0.36.7",
     "flux": "^2.1.1",
     "react": "^0.14.7",

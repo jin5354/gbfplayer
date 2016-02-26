@@ -1,6 +1,6 @@
 {
     "proxyPort": "7777",
-    "agentType": "1",
+    "agentType": "0",
     "agentHost": "127.0.0.1",
     "agentPort": "1080"
 }

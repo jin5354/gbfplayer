@@ -12,12 +12,16 @@ let init = () => {
             });
         }
         if(type === 'req') {
-            AppDispatcher.dispatch({
+
+            let obj = {
                 type: 'HTTPData',
                 msg: 'req',
-                data: data,
-                log: `GET ${data.url}`
-            });
+                data: data
+            };
+            if(!(data.url.search(/assets\/img/ig) !== -1) && !(data.url.search(/\.woff/ig) !== -1) && !(data.url.search(/sound/ig) !== -1)) {
+                obj.log = `GET ${data.url}`;
+            }
+            AppDispatcher.dispatch(obj);
         }
 
     });

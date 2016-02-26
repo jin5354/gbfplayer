@@ -5,6 +5,8 @@ import path from 'path';
 import WebviewCtrlStore from '../stores/WebviewCtrlStore';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
+require("babel-polyfill");
+
 class GameWebview extends React.Component {
 
     componentDidMount() {
@@ -189,9 +191,55 @@ class GameWebview extends React.Component {
                 webview.removeEventListener('did-get-response-details', resolveSpeedUpEvent);
                 webview.executeJavaScript(`createjs.Ticker.setFPS(24);`);
                 break;
-            case 'execJS':
-                let execJS = fs.readFileSync(path.join(dirname, 'js/plugins/test.js'), 'utf-8');
-                webview.executeJavaScript(execJS);
+            case 'autoplay':
+                console.info('run!');
+                let run = (generatorFunction) => {
+                    let resume = (callbackValue) => {
+                        generatorItr.next(callbackValue);
+                    };
+                    let generatorItr = generatorFunction(resume);
+                    generatorItr.next();
+                };
+
+                let js = ``;
+
+                //step1 打log
+                let step1 = (resume) => {
+                    console.info('开始AutoPlay!!');
+                    setTimeout(resume, 500);
+                };
+                //step2 进入extra界面
+                let step2 = (resume) => {
+                    js = `
+                        location.href = 'http://gbf.game.mbga.jp/#quest/extra'
+                    `;
+                    webview.executeJavaScript(js);
+                    console.info('跳转至EXTRA界面!!');
+                    setTimeout(resume, 500);
+                };
+                //step3 点击任务按钮，转至选择召唤界面
+                let step3 = (resume) => {
+                    js = `
+                        if($('div[data-chapter-id="40011"]').length > 0) {
+                            $('div[data-chapter-id="40011"]').trigger('tap');
+                        }
+                    `;
+                    let questTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                        if(webview.getURL().search(/supporter/ig) != -1) {
+                            console.info('任务按钮已点击，转至选择召唤界面!!');
+                            clearInterval(questTapper);
+                            setTimeout(resume, 500);
+                        }
+                    }, 2000);
+                };
+                //step4 点击第一个召唤兽，打开队伍确定页面
+                run(function* autoplay(resume) {
+                    yield step1(resume);
+                    yield step2(resume);
+                    yield step3(resume);
+                });
+                break;
             }
         });
 

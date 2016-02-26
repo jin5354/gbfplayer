@@ -87,9 +87,12 @@ class DevPanel extends React.Component {
             return (<p className="agent-setting">Host: <input value={this.state.agentHost} onChange={this.agentHostOnChange.bind(this)} /> Port: <input value={this.state.agentPort} onChange={this.agentPortOnChange.bind(this)} /></p>);
         }
     }
-    noti() {
-        new Notification('Apmax!', { body: '测试通知！'});
-
+    autoplay() {
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'autoplay',
+            log: '启动AutoPlay!'
+        });
     }
     render() {
         return (
@@ -110,7 +113,7 @@ class DevPanel extends React.Component {
                     <p><Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.clearCache}>清除全部缓存</Button></p>
-                    <p><Button type="primary" size="small" onClick={this.noti}>测试通知</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.autoplay}>Autoplay启动</Button></p>
                 </div>
             </div>
         );
