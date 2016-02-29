@@ -93,9 +93,11 @@ class DevPanel extends React.Component {
             msg: 'autoplay',
             log: '启动AutoPlay_ap!',
             config: {
-                questType: 'ap',
-                questPage: 'http://gbf.game.mbga.jp/#quest/extra',
-                questID: '40022'
+                ap: {
+                    questType: 'ap',
+                    questPage: 'http://gbf.game.mbga.jp/#quest/extra',
+                    questID: '40022'
+                }
             }
         });
     }
@@ -109,6 +111,39 @@ class DevPanel extends React.Component {
                 questPage: 'http://gbf.game.mbga.jp/#quest/assist',
                 questID: '40022'
             }
+        });
+    }
+    autoplay() {
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'autoplay',
+            log: '开始值机..',
+            config: {
+                mode: '1',// 当ap/bp满时触发
+                ap: {
+                    questType: 'ap',
+                    questPage: 'http://gbf.game.mbga.jp/#quest/extra',
+                    questID: '40022'
+                },
+                bp: {
+                    questType: 'bp',
+                    questPage: 'http://gbf.game.mbga.jp/#quest/assist'
+                },
+                casino: true
+            }
+        });
+    }
+    cancelAutoplay() {
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'cancelAutoplay',
+            log: '取消值机。'
+        });
+    }
+    test() {
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'test'
         });
     }
     render() {
@@ -127,11 +162,11 @@ class DevPanel extends React.Component {
                     </p>
                     {this.renderAgentSetting()}
                     <hr />
-                    <p><Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button></p>
-                    <p><Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.openSelfDevTools}>AppDevTools</Button> <Button type="primary" size="small" onClick={this.openDevTools}>WebviewDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.clearCache}>清除全部缓存</Button></p>
-                    <p><Button type="primary" size="small" onClick={this.autoplay_ap}>Autoplay-刷ap</Button></p>
-                    <p><Button type="primary" size="small" onClick={this.autoplay_bp}>Autoplay-刷bp</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.autoplay_ap}>清ap</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.autoplay}>开始自动值机</Button><Button type="primary" size="small" onClick={this.cancelAutoplay}>取消自动值机</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.test}>测试脚本</Button></p>
                 </div>
             </div>
         );

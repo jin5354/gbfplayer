@@ -10,11 +10,15 @@ import GameDataStore from '../stores/GameDataStore';
 require('babel-polyfill');
 
 let dirname = app.getAppPath();
-let status = GameDataStore.getStatus();
-
-let updateStatus = () => {
-    status = GameDataStore.getStatus();
+let randomTime = (time, percent = 20) => {
+    return time + (Math.random() * (time * percent / 50) - time * percent / 100);
 };
+let status = GameDataStore.getStatus();
+GameDataStore.addEventListener('StatusUpdate', () => {
+    status = GameDataStore.getStatus();
+});
+
+let _questRunningFlag = false;
 
 class GameWebview extends React.Component {
 
@@ -42,250 +46,299 @@ class GameWebview extends React.Component {
             console.log('Guest page logged a message:', e.message);
         });
 
-
-        let run = (generatorFunction) => {
-            let resume = (callbackValue) => {
-                generatorItr.next(callbackValue);
-            };
-            let generatorItr = generatorFunction(resume);
-            generatorItr.next();
-        };
-
         let autoplayUtils = {
             //进入任务列表页界面
-            jumpIntoQuestPage(resume, config) {
-                let js = `
-                    location.href = '${config.questPage}'
-                `;
-                console.info(js);
-                webview.executeJavaScript(js);
-                LogStore.push(`跳转至任务列表界面:${config.questPage}`);
-                setTimeout(resume, 500);
+            jumpIntoQuestPage(config) {
+                return new Promise((resolve, reject) => {
+                    let js = `
+                        location.href = '${config.questPage}'
+                    `;
+                    console.info(js);
+                    webview.executeJavaScript(js);
+                    LogStore.push(`跳转至任务列表界面:${config.questPage}`);
+                    resolve();
+                });
             },
             //点击任务按钮，转至选择召唤界面(AP)
-            apConfirmQuest(resume, config) {
-                LogStore.push(`开始尝试确定任务，任务ID:${config.questID}`);
-                let js = `
-                    if($('div[data-chapter-id="${config.questID}"]').length > 0) {
-                        $('div[data-chapter-id="${config.questID}"]').trigger('tap');
-                    }
-                `;
-                let questTapper = setInterval(() => {
-                    webview.executeJavaScript(js);
-                    if(webview.getURL().search(/supporter/ig) != -1) {
-                        LogStore.push('任务按钮已点击，转至选择召唤界面..');
-                        clearInterval(questTapper);
-                        setTimeout(resume, 500);
-                    }else if(webview.getURL().search(/#quest/ig) == -1) {
-                        LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
-                        clearInterval(questTapper);
-                    }
-                }, 2000);
+            apConfirmQuest(config) {
+                return new Promise((resolve, reject) => {
+                    LogStore.push(`开始尝试确定任务，任务ID:${config.questID}`);
+                    let js = `
+                        if($('div[data-chapter-id="${config.questID}"]').length > 0) {
+                            $('div[data-chapter-id="${config.questID}"]').trigger('tap');
+                        }
+                    `;
+                    let questTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                        if(webview.getURL().search(/supporter/ig) != -1) {
+                            LogStore.push('任务按钮已点击，转至选择召唤界面..');
+                            clearInterval(questTapper);
+                            resolve();
+                        }else if(webview.getURL().search(/#quest/ig) == -1) {
+                            LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
+                            clearInterval(questTapper);
+                            reject();
+                        }
+                    }, randomTime(2000));
+                });
             },
             //点击任务按钮，转至选择召唤界面(BP)
-            bpConfirmQuest(resume) {
-                LogStore.push(`开始尝试确定Multi任务..`);
-                let js = `
-                    if(!window.questFinder) {
-                        var questFinder = setInterval(function(){
-                            if($('div.btn-multi-raid.lis-raid').length > 0) {
-                                console.info($('div.btn-multi-raid.lis-raid'));
-                                clearInterval(questFinder);
-                                $($('div.btn-multi-raid.lis-raid')[0]).trigger('tap');
-                            }
-                        },1000);
-                    }
-                `;
-                LogStore.push(`确定任务并验证..`);
-                let getQuestTapper = setInterval(() => {
-                    webview.executeJavaScript(js);
-                    if(webview.getURL().search(/supporter_raid/ig) != -1) {
-                        LogStore.push(`任务按钮已点击，转至选择召唤界面..`);
-                        clearInterval(getQuestTapper);
-                        setTimeout(resume, 500);
-                    }
-                }, 2000);
+            bpConfirmQuest() {
+                return new Promise((resolve, reject) => {
+                    LogStore.push(`开始尝试确定Multi任务..`);
+                    let js = `
+                        if(!window.questFinder) {
+                            var questFinder = setInterval(function(){
+                                if($('div.btn-multi-raid.lis-raid').length > 0) {
+                                    console.info($('div.btn-multi-raid.lis-raid'));
+                                    clearInterval(questFinder);
+                                    $($('div.btn-multi-raid.lis-raid')[0]).trigger('tap');
+                                }
+                            },1000);
+                        }
+                    `;
+                    LogStore.push(`确定任务并验证..`);
+                    let getQuestTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                        if(webview.getURL().search(/supporter_raid/ig) != -1) {
+                            LogStore.push(`任务按钮已点击，转至选择召唤界面..`);
+                            clearInterval(getQuestTapper);
+                            resolve();
+                        }
+                    }, randomTime(2000)); 
+                });
             },
             //ap确定第一个召唤兽
-            apConfirmSupporter(resume) {
-                LogStore.push('开始尝试确定召唤兽..');
-                let js = `
-                    if($('div.se-quest-start').length == 0) {
-                        $('div.prt-supporter-attribute').each(function() {
-                            if(!($(this).hasClass('disableView'))) {
-                                console.info('已找到，点击。');
-                                $(($(this).find('.btn-supporter'))[0]).trigger('tap');
-                            }
-                        });
-                    }else {
-                        console.info('已成功确定召唤石！进入战斗界面....');
-                        $('div.se-quest-start').trigger('tap');
-                    }
-                `;
+            apConfirmSupporter() {
+                return new Promise((resolve, reject) => {
+                    LogStore.push('开始尝试确定召唤兽..');
+                    let js = `
+                        if($('div.se-quest-start').length == 0) {
+                            $('div.prt-supporter-attribute').each(function() {
+                                if(!($(this).hasClass('disableView'))) {
+                                    console.info('已找到，点击。');
+                                    $(($(this).find('.btn-supporter'))[0]).trigger('tap');
+                                }
+                            });
+                        }else {
+                            console.info('已成功确定召唤石！进入战斗界面....');
+                            $('div.se-quest-start').trigger('tap');
+                        }
+                    `;
 
-                let supporterTapper = setInterval(() => {
-                    webview.executeJavaScript(js);
-                    if(webview.getURL().search(/raid/ig) != -1) {
-                        LogStore.push('确定已进入战斗..');
-                        clearInterval(supporterTapper);
-                        setTimeout(resume, 500);
-                    }else if(webview.getURL().search(/#quest/ig) == -1) {
-                        LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
-                        clearInterval(supporterTapper);
-                    }
-                }, 2000);
+                    let supporterTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                        if(webview.getURL().search(/raid/ig) != -1) {
+                            LogStore.push('确定已进入战斗..');
+                            clearInterval(supporterTapper);
+                            resolve();
+                        }else if(webview.getURL().search(/#quest/ig) == -1) {
+                            LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
+                            clearInterval(supporterTapper);
+                            reject();
+                        }
+                    }, randomTime(2000)); 
+                });
             },
             //bp确定第一个召唤兽
-            bpConfirmSupporter(resume) {
-                //let questIDs = [40011, 40014];
-                LogStore.push(`开始尝试确定召唤兽。`);
+            bpConfirmSupporter() {
+                return new Promise((resolve, reject) => {
+                    //let questIDs = [40011, 40014];
+                    LogStore.push(`开始尝试确定召唤兽。`);
 
-                let js = `
-                    if($('div.se-quest-start').length == 0) {
-                        $('div.prt-supporter-attribute').each(function() {
-                            if(!($(this).hasClass('disableView'))) {
-                                console.info('已找到，点击。');
-                                $(($(this).find('.btn-supporter'))[0]).trigger('tap');
-                            }
-                        });
-                    }else {
-                        console.info('已成功确定召唤石！进入战斗界面....');
-                        $('div.se-quest-start').trigger('tap');
-                    }
-                `;
-                LogStore.push(`确定召唤兽并进入战斗..`);
-                let supporterTapper = setInterval(() => {
-                    webview.executeJavaScript(js);
-                    if(webview.getURL().search(/raid_multi/ig) != -1) {
-                        LogStore.push(`确定已进入战斗..`);
-                        clearInterval(supporterTapper);
-                        setTimeout(resume, 500);
-                    }else if(webview.getURL().search(/#quest/ig) == -1) {
-                        LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
-                        clearInterval(supporterTapper);
-                    }
-                }, 2000);
+                    let js = `
+                        if($('div.se-quest-start').length == 0) {
+                            $('div.prt-supporter-attribute').each(function() {
+                                if(!($(this).hasClass('disableView'))) {
+                                    console.info('已找到，点击。');
+                                    $(($(this).find('.btn-supporter'))[0]).trigger('tap');
+                                }
+                            });
+                        }else {
+                            console.info('已成功确定召唤石！进入战斗界面....');
+                            $('div.se-quest-start').trigger('tap');
+                        }
+                    `;
+                    LogStore.push(`确定召唤兽并进入战斗..`);
+                    let supporterTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                        if(webview.getURL().search(/raid_multi/ig) != -1) {
+                            LogStore.push(`确定已进入战斗..`);
+                            clearInterval(supporterTapper);
+                            resolve();
+                        }else if(webview.getURL().search(/#quest/ig) == -1) {
+                            LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
+                            clearInterval(supporterTapper);
+                            reject();
+                        }
+                    }, randomTime(2000));
 
-                webview.send('supporter');
+                });
             },
             //AP战斗——点击战斗按钮，设置自动攻击
-            apAutoAttack(resume) {
-                LogStore.push('开始尝试进行攻击..');
+            apAutoAttack() {
+                return new Promise((resolve, reject) => {
+                    LogStore.push('开始尝试进行攻击..');
 
-                let js = `
-                    if(!window.autoTapper) {
-                        var autoTapper = setInterval(function(){
-                            console.info('试图触发自动攻击中..');
-                            if(window.stage && (window.stage.gGameStatus.auto_attack != true)) {
-                                console.info('触发自动攻击.');
-                                window.stage.gGameStatus.auto_attack = true;
-                            }else if(window.stage && (window.stage.gGameStatus.auto_attack == true)) {
-                                console.info('成功设置自动攻击。');
-                                $('div.btn-attack-start.display-on').trigger('tap');
-                                clearInterval(autoTapper);
-                            }
-                        },1000);
-                    }
-                `;
+                    let js = `
+                        if(!window.autoTapper) {
+                            var autoTapper = setInterval(function(){
+                                console.info('试图触发自动攻击中..');
+                                if(window.stage && (window.stage.gGameStatus.auto_attack != true)) {
+                                    console.info('触发自动攻击.');
+                                    window.stage.gGameStatus.auto_attack = true;
+                                }else if(window.stage && (window.stage.gGameStatus.auto_attack == true)) {
+                                    console.info('成功设置自动攻击。');
+                                    $('div.btn-attack-start.display-on').trigger('tap');
+                                    clearInterval(autoTapper);
+                                }
+                            },1000);
+                        }
+                    `;
 
-                let attackTapper = setInterval(() => {
-                    webview.executeJavaScript(js);
-                    if(webview.getURL().search(/#result/ig) != -1) {
-                        LogStore.push('战斗结束。进入结算页面..');
-                        clearInterval(attackTapper);
-                        setTimeout(resume, 500);
-                    }else if(webview.getURL().search(/#raid/ig) == -1) {
-                        LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
-                        clearInterval(attackTapper);
-                    }
-                }, 2000);
+                    let attackTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                        if(webview.getURL().search(/#result/ig) != -1) {
+                            LogStore.push('战斗结束。进入结算页面..');
+                            clearInterval(attackTapper);
+                            resolve();
+                        }else if(webview.getURL().search(/#raid/ig) == -1) {
+                            LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
+                            clearInterval(attackTapper);
+                            reject();
+                        }
+                    }, randomTime(2000)); 
+                });
             },
             //BP战斗——不停平A
-            bpAutoAttack(resume) {
-                LogStore.push('开始尝试进行攻击..');
-                let js = `
-                    if($('div.btn-attack-start.display-on').length > 0) {
-                        $('div.btn-attack-start.display-on').trigger('tap');
-                    }
-                    if($('div.prt-popup-footer .btn-usual-text').length > 0) {
-                        $('div.prt-popup-footer .btn-usual-text').trigger('tap');
-                    }
-                `;
+            bpAutoAttack() {
+                return new Promise((resolve, reject) => {
+                    LogStore.push('开始尝试进行攻击..');
+                    let js = `
+                        if($('div.btn-attack-start.display-on').length > 0) {
+                            $('div.btn-attack-start.display-on').trigger('tap');
+                        }
+                        if($('div.prt-popup-footer .btn-usual-text').length > 0) {
+                            $('div.prt-popup-footer .btn-usual-text').trigger('tap');
+                        }
+                    `;
 
-                let reloader = setInterval(() => {
-                    webview.reload();
-                    if(webview.getURL().search(/#quest/ig) != -1){
-                        LogStore.push(`战斗结束，进入结算。`);
-                        clearInterval(reloader);
-                        clearInterval(attackTapper);
-                        setTimeout(resume, 500);
-                    }else if(webview.getURL().search(/raid_multi/ig) == -1) {
-                        LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
-                        clearInterval(reloader);
-                        clearInterval(attackTapper);
-                    }
-                } ,50000);
-                let attackTapper = setInterval(() => {
-                    webview.executeJavaScript(js);
-                } ,5000);
+                    let reloader = setInterval(() => {
+                        webview.reload();
+                        setTimeout(() => {
+                            if(webview.getURL().search(/#quest/ig) != -1){
+                                LogStore.push(`战斗结束，进入结算。`);
+                                clearInterval(reloader);
+                                clearInterval(attackTapper);
+                                resolve();
+                            }else if(webview.getURL().search(/raid_multi/ig) == -1) {
+                                LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
+                                clearInterval(reloader);
+                                clearInterval(attackTapper);
+                                reject();
+                            }
+                        } ,randomTime(5000));
+                    } ,randomTime(50000));
+                    let attackTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                    } ,randomTime(15000)); 
+                });
             },
             //AP流程结束，点击OK按钮
-            finishApTask(resume) {
-                LogStore.push('进入结算程序..');
-                let js = `
-                    if($('div.prt-popup-footer .btn-usual-ok').length > 0) {
-                        $('div.prt-popup-footer .btn-usual-ok').trigger('tap');
-                    }
-                    if($('div.prt-button-area .btn-control').length > 0) {
-                        $('div.prt-button-area .btn-control').trigger('tap');
-                    }
-                `;
-                let resultTapper = setInterval(() => {
-                    webview.executeJavaScript(js);
-                    if(webview.getURL().search(/#quest/ig) != -1) {
-                        LogStore.push('流程结束，返回任务列表页..');
-                        clearInterval(resultTapper);
-                        setTimeout(resume, 500);
-                    }else if(webview.getURL().search(/#result/ig) == -1) {
-                        LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
-                        clearInterval(resultTapper);
-                    }
-                }, 2000);
+            finishApTask() {
+                return new Promise((resolve, reject) => {
+                    LogStore.push('进入结算程序..');
+                    let js = `
+                        if($('div.prt-popup-footer .btn-usual-ok').length > 0) {
+                            $('div.prt-popup-footer .btn-usual-ok').trigger('tap');
+                        }
+                        if($('div.prt-button-area .btn-control').length > 0) {
+                            $('div.prt-button-area .btn-control').trigger('tap');
+                        }
+                    `;
+                    let resultTapper = setInterval(() => {
+                        webview.executeJavaScript(js);
+                        if(webview.getURL().search(/#quest/ig) != -1) {
+                            LogStore.push('流程结束，返回任务列表页..');
+                            clearInterval(resultTapper);
+                            resolve();
+                        }else if(webview.getURL().search(/#result/ig) == -1) {
+                            LogStore.push(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
+                            clearInterval(resultTapper);
+                            reject();
+                        }
+                    }, randomTime(2000)); 
+                });
             },
-            //step6 流程结束，直接跳回主页。
-            finishBpTask(resume) {
-                LogStore.push('进入BP结算程序..');
-                let js = `
-                    location.href = 'http://gbf.game.mbga.jp/#mypage'
-                `;
-                webview.executeJavaScript(js);
-                LogStore.push(`流程结束，返回首页。`);
-                setTimeout(resume, 500);
+            //BP流程结束，直接跳回主页。
+            finishBpTask() {
+                return new Promise((resolve, reject) => {
+                    LogStore.push('进入BP结算程序..');
+                    let js = `
+                        location.href = 'http://gbf.game.mbga.jp/#mypage'
+                    `;
+                    webview.executeJavaScript(js);
+                    LogStore.push(`结算结束，返回首页。`);
+                    setTimeout(() => {
+                        resolve();
+                    }, randomTime(5000));
+                });
+            },
+            //BP结束后，清理未确认战斗
+            clearBattle() {
+                return new Promise((resolve, reject) => {
+                    LogStore.push('清理未确认战斗..');
+                    let js = `
+                        if($('div.btn-multi-raid.lis-raid').length > 0) {
+                            $($('div.btn-multi-raid.lis-raid')[0]).trigger('tap');
+                        }
+                        if($('div.prt-popup-footer .btn-usual-ok').length > 0) {
+                            $('div.prt-popup-footer .btn-usual-ok').trigger('tap');
+                        }
+                        if($('div.prt-button-area .btn-control').length > 0) {
+                            $('div.prt-button-area .btn-control').trigger('tap');
+                        }
+                    `;
+                    webview.executeJavaScript('location.href = "http://gbf.game.mbga.jp/#quest/assist/unclaimed"');
+                    setTimeout(() => {
+                        let clearer = setInterval(() => {
+                            webview.executeJavaScript(js);
+                            if(webview.getURL().search(/#quest\/index/ig) !== -1) {
+                                clearInterval(clearer);
+                                LogStore.push(`清理结束，返回首页。`);
+                                webview.executeJavaScript('location.href = "http://gbf.game.mbga.jp/#mypage"');
+                                resolve();
+                            }
+                        }, randomTime(3000));
+                    } ,randomTime(3000));
+                });
             }
         };
 
         let autoplay = (config) => {
 
             if(config.questType == 'ap') {
-                run(function* autoplay(resume) {
-                    yield autoplayUtils.jumpIntoQuestPage(resume, config);
-                    yield autoplayUtils.apConfirmQuest(resume, config);
-                    yield autoplayUtils.apConfirmSupporter(resume);
-                    yield autoplayUtils.apAutoAttack(resume);
-                    yield autoplayUtils.finishApTask(resume);
-                    LogStore.push(`任务按预期完成~`);
-                });
+                let autoplayAsync = async function() {
+                    await autoplayUtils.jumpIntoQuestPage(config);
+                    await autoplayUtils.apConfirmQuest(config);
+                    await autoplayUtils.apConfirmSupporter();
+                    await autoplayUtils.apAutoAttack();
+                    await autoplayUtils.finishApTask();
+                    LogStore.push(`ap任务按预期完成~`);
+                };
+                return autoplayAsync;
             }else if (config.questType == 'bp') {
-                run(function* autoplay(resume) {
-                    yield autoplayUtils.jumpIntoQuestPage(resume, config);
-                    yield autoplayUtils.bpConfirmQuest(resume);
-                    yield autoplayUtils.bpConfirmSupporter(resume);
-                    yield autoplayUtils.bpAutoAttack(resume);
-                    yield autoplayUtils.finishBpTask(resume);
-                    LogStore.push(`任务按预期完成~`);
-                });
+                let autoplayAsync = async function() {
+                    await autoplayUtils.jumpIntoQuestPage(config);
+                    await autoplayUtils.bpConfirmQuest();
+                    await autoplayUtils.bpConfirmSupporter();
+                    await autoplayUtils.bpAutoAttack();
+                    await autoplayUtils.finishBpTask();
+                    await autoplayUtils.clearBattle();
+                    LogStore.push(`bp任务按预期完成~`);
+                };
+                return autoplayAsync;
             }
-
         };
 
         let resolvePokerNavigateEvent,
@@ -298,7 +351,9 @@ class GameWebview extends React.Component {
             resolveBingoFinishEvent,
             resolveSpeedUpNavigateEvent,
             resolveSpeedUpFinishEvent,
-            resolveSpeedUpEvent;
+            resolveSpeedUpEvent,
+            apPlayer,
+            bpPlayer;
 
         WebviewCtrlStore.addEventListener('change', (event) => {
             switch(event.msg) {
@@ -446,120 +501,102 @@ class GameWebview extends React.Component {
                 webview.executeJavaScript(`createjs.Ticker.setFPS(24);`);
                 break;
             case 'autoplay':
-                console.log(event.config);
-                autoplay(event.config);
+                status = GameDataStore.getStatus();
+                LogStore.push(`自动值机开启..`);
 
-                /*
-                if(event.autoplay == 'ap') {
-        
+                let jumpToPoker = () => {
+                    if(_questRunningFlag) {
+                        LogStore.push(`其他任务执行中,暂时无法执行..`);
+                    }else {
+                        webview.executeJavaScript(`location.href = 'http://gbf.game.mbga.jp/#casino/game/poker/200030'`);
+                    }
+                };
 
-                    
-                } else if(event.autoplay == 'bp') {
-
-                    //step3 点击任务按钮，转至选择召唤界面
-                    let step3 = (resume) => {
-                        console.info('开始尝试确定任务。');
-                        js = `
-                            if(!window.questFinder) {
-                                var questFinder = setInterval(function(){
-                                    if($('div.btn-multi-raid.lis-raid').length > 0) {
-                                        console.info($('div.btn-multi-raid.lis-raid'));
-                                        clearInterval(questFinder);
-                                        $($('div.btn-multi-raid.lis-raid')[0]).trigger('tap');
-                                    }
-                                },1000);
-                            }
-                        `;
-                        let getQuestTapper = setInterval(() => {
-                            webview.executeJavaScript(js);
-                            console.info('确定任务并验证..');
-                            if(webview.getURL().search(/supporter_raid/ig) != -1) {
-                                console.info('任务按钮已点击，转至选择召唤界面。');
-                                clearInterval(getQuestTapper);
-                                setTimeout(resume, 500);
-                            }
-                        }, 2000);
-                    };
-                    //step4 点击第一个召唤兽，打开队伍确定页面
-                    let step4 = (resume) => {
-                        //let questIDs = [40011, 40014];
-                        console.info('开始尝试确定召唤兽。');
-
-                        js = `
-                            $('div.prt-supporter-attribute').each(function() {
-                                if(!($(this).hasClass('disableView'))) {
-                                    console.info('已找到，点击。');
-                                    $(($(this).find('.btn-supporter'))[0]).trigger('tap');
+                apPlayer = () => {
+                    if(_questRunningFlag) {
+                        LogStore.push(`其他任务执行中,暂时无法执行..`);
+                    }else {
+                        _questRunningFlag = true;
+                        LogStore.push(`ap已满，执行ap任务..`);
+                        autoplay(event.config.ap)().then((success) => {
+                            if(success) {
+                                _questRunningFlag = false;
+                                if(Number(status.bp) === Number(status.maxBp)) {
+                                    bpPlayer();
+                                }else {
+                                    LogStore.push(`ap与bp均不满，先去打一会儿牌吧！`);
+                                    jumpToPoker();
                                 }
-                            });
-                        `;
-                        
-                        let supporterTapper = setInterval(() => {
-                            console.info('确定召唤兽并进入战斗..');
-                            webview.executeJavaScript(js);
-                            if(webview.getURL().search(/raid_multi/ig) != -1) {
-                                console.info('确定已进入战斗。');
-                                clearInterval(supporterTapper);
-                                setTimeout(resume, 500);
                             }
-                        }, 2000);
+                        });
+                    }
+                };
+                bpPlayer = () => {
+                    if(_questRunningFlag) {
+                        LogStore.push(`其他任务执行中,暂时无法执行..`);
+                    }else {
+                        _questRunningFlag = true;
+                        LogStore.push(`bp已满，执行bp任务..`);
+                        autoplay(event.config.bp)().then((success) => {
+                            if(success) {
+                                _questRunningFlag = false;
+                                if(Number(status.ap) === Number(status.maxAp)) {
+                                    apPlayer();
+                                }else {
+                                    LogStore.push(`ap与bp均不满，先去打一会儿牌吧！`);
+                                    jumpToPoker();
+                                }
+                            }
+                        });
+                    }
+                };
 
-                        webview.send('supporter');
-                    };
-                    //step5 点击战斗按钮
-                    let step5 = (resume) => {
-                        js = `
-                            if($('div.btn-attack-start.display-on').length > 0) {
-                                $('div.btn-attack-start.display-on').trigger('tap');
-                            }
-                            if($('div.prt-popup-footer .btn-usual-text').length > 0) {
-                                $('div.prt-popup-footer .btn-usual-text').trigger('tap');
-                            }
-                        `;
-        
-                        let reloader = setInterval(() => {
-                            webview.reload();
-                            if(webview.getURL().search(/#quest/ig) != -1){
-                                console.info(`战斗结束，返回任务列表页。`);
-                                clearInterval(reloader);
-                                clearInterval(attackTapper);
-                                setTimeout(resume, 500);
-                            }else if(webview.getURL().search(/raid_multi/ig) == -1) {
-                                console.info(`意外脱离预设URL，脚本终止。URL: ${webview.getURL()}`);
-                                clearInterval(reloader);
-                                clearInterval(attackTapper);
-                            }
-                        } ,30000);
-                        let attackTapper = setInterval(() => {
-                            webview.executeJavaScript(js);
-                        } ,5000);
-                        setTimeout(resume, 500);
-                    };
-
-                    //step6 流程结束，点击OK按钮
-                    let step6 = (resume) => {
-                        js = `
-                            if($('div.prt-popup-footer .btn-usual-ok').length > 0) {
-                                $('div.prt-popup-footer .btn-usual-ok').trigger('tap');
-                            }
-                        `;
-                        let okTapper = setInterval(() => {
-                            webview.executeJavaScript(js);
-                        } ,5000);
-                        webview.executeJavaScript(js);
-                        console.info('流程结束，返回任务列表页。');
-                        setTimeout(resume, 500);
-                    };
-
-                    run(function* autoplay(resume) {
-                        yield step1(resume);
-                        yield step2(resume);
-                        yield step3(resume);
-                        yield step4(resume);
-                        yield step5(resume);
-                    });
+                if(event.config.mode == 1) {
+                    if('ap' in event.config) {
+                        LogStore.push(`挂载ap监听器~`);
+                        GameDataStore.addEventListener('ApMax', apPlayer);
+                        if(Number(status.ap) === Number(status.maxAp)) {
+                            apPlayer();
+                        }
+                    }
+                    if('bp' in event.config) {
+                        LogStore.push(`挂载bp监听器~`);
+                        GameDataStore.addEventListener('BpMax', bpPlayer);
+                        if(Number(status.bp) === Number(status.maxBp)) {
+                            bpPlayer();
+                        }
+                    }
+                    if(Number(status.ap) !== Number(status.maxAp) && Number(status.bp) !== Number(status.maxBp)) {
+                        LogStore.push(`ap与bp均不满，先去打一会儿牌吧！`);
+                        jumpToPoker();
+                    }
                 }
-                */
+                break;
+            case 'cancelAutoplay':
+                GameDataStore.removeEventListener('ApMax', apPlayer);
+                GameDataStore.removeEventListener('BpMax', bpPlayer);
+                LogStore.push(`自动值机已关闭..`);
+                break;
+            case 'test':
+                console.info('测试脚本！');
+
+                let delay = (time) => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            console.info(time);
+                            resolve();
+                        },time);
+                    });
+                };
+                let myDelayedMessages = async function (){
+                    console.info('async函数执行！');
+                    await delay(1000);
+                    await delay(1200);
+                    await console.info('end.');
+                };
+
+                let start = myDelayedMessages();
+
                 break;
             }
         });
