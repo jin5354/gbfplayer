@@ -18,8 +18,8 @@ let init = () => {
                 msg: 'req',
                 data: data
             };
-            if(!(data.url.search(/assets\/img/ig) !== -1) && !(data.url.search(/\.woff/ig) !== -1) && !(data.url.search(/sound/ig) !== -1)) {
-                obj.log = `GET ${data.url}`;
+            if(!(data.url.search(/assets\//ig) !== -1) && !(data.url.search(/\.woff/ig) !== -1) && !(data.url.search(/sound/ig) !== -1)) {
+                //obj.log = `GET ${data.url}`;
             }
             AppDispatcher.dispatch(obj);
         }

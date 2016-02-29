@@ -87,11 +87,28 @@ class DevPanel extends React.Component {
             return (<p className="agent-setting">Host: <input value={this.state.agentHost} onChange={this.agentHostOnChange.bind(this)} /> Port: <input value={this.state.agentPort} onChange={this.agentPortOnChange.bind(this)} /></p>);
         }
     }
-    autoplay() {
+    autoplay_ap() {
         AppDispatcher.dispatch({
             type: 'gameWebviewCtrl',
             msg: 'autoplay',
-            log: '启动AutoPlay!'
+            log: '启动AutoPlay_ap!',
+            config: {
+                questType: 'ap',
+                questPage: 'http://gbf.game.mbga.jp/#quest/extra',
+                questID: '40022'
+            }
+        });
+    }
+    autoplay_bp() {
+        AppDispatcher.dispatch({
+            type: 'gameWebviewCtrl',
+            msg: 'autoplay',
+            log: '启动AutoPlay_bp!',
+            config: {
+                questType: 'bp',
+                questPage: 'http://gbf.game.mbga.jp/#quest/assist',
+                questID: '40022'
+            }
         });
     }
     render() {
@@ -113,7 +130,8 @@ class DevPanel extends React.Component {
                     <p><Button type="primary" size="small" onClick={this.openSelfDevTools}>打开AppDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.openDevTools}>打开WebviewDevTools</Button></p>
                     <p><Button type="primary" size="small" onClick={this.clearCache}>清除全部缓存</Button></p>
-                    <p><Button type="primary" size="small" onClick={this.autoplay}>Autoplay启动</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.autoplay_ap}>Autoplay-刷ap</Button></p>
+                    <p><Button type="primary" size="small" onClick={this.autoplay_bp}>Autoplay-刷bp</Button></p>
                 </div>
             </div>
         );

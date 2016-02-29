@@ -6,7 +6,7 @@ let emitter = new EventEmitter();
 AppDispatcher.register((action) => {
     if(action.type == 'gameWebviewCtrl') {
         if(action.msg) {
-            emitter.emit('change', action.msg);
+            emitter.emit('change', action);
         }
     }
 });

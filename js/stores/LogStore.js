@@ -20,6 +20,14 @@ export default {
     getLog() {
         return _log;
     },
+    push(log) {
+        let now = new Date();
+        _log.push(now.toLocaleTimeString() + ' ' + log);
+        if(_log.length > 20) {
+            _log.shift();
+        }
+        emitter.emit('log');
+    },
     addEventListener(event, callback) {
         emitter.addListener(event,callback);
     },

@@ -1,0 +1,1 @@
+var ipcRenderer = require('electron').ipcRenderer;

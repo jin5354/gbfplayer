@@ -124,7 +124,7 @@ AppDispatcher.register((action) => {
                 parse.userInfo(action.data);
                 parse.status(action.data);
 
-                console.log(action.data);
+                //console.log(action.data);
 
             }
             emitter.emit('HTTPDataUpdate');
