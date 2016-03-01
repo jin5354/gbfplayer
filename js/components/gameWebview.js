@@ -325,6 +325,7 @@ class GameWebview extends React.Component {
                     await autoplayUtils.apAutoAttack();
                     await autoplayUtils.finishApTask();
                     LogStore.push(`ap任务按预期完成~`);
+                    return true;
                 };
                 return autoplayAsync;
             }else if (config.questType == 'bp') {
@@ -336,6 +337,7 @@ class GameWebview extends React.Component {
                     await autoplayUtils.finishBpTask();
                     await autoplayUtils.clearBattle();
                     LogStore.push(`bp任务按预期完成~`);
+                    return true;
                 };
                 return autoplayAsync;
             }
@@ -506,7 +508,7 @@ class GameWebview extends React.Component {
 
                 let jumpToPoker = () => {
                     if(_questRunningFlag) {
-                        LogStore.push(`其他任务执行中,暂时无法执行..`);
+                        LogStore.push(`其他任务执行中,暂时无法前去打牌..`);
                     }else {
                         webview.executeJavaScript(`location.href = 'http://gbf.game.mbga.jp/#casino/game/poker/200030'`);
                     }
@@ -514,7 +516,7 @@ class GameWebview extends React.Component {
 
                 apPlayer = () => {
                     if(_questRunningFlag) {
-                        LogStore.push(`其他任务执行中,暂时无法执行..`);
+                        LogStore.push(`其他任务执行中,暂时无法执行ap任务..`);
                     }else {
                         _questRunningFlag = true;
                         LogStore.push(`ap已满，执行ap任务..`);
@@ -533,7 +535,7 @@ class GameWebview extends React.Component {
                 };
                 bpPlayer = () => {
                     if(_questRunningFlag) {
-                        LogStore.push(`其他任务执行中,暂时无法执行..`);
+                        LogStore.push(`其他任务执行中,暂时无法执行bp任务..`);
                     }else {
                         _questRunningFlag = true;
                         LogStore.push(`bp已满，执行bp任务..`);

@@ -120,11 +120,13 @@ class DevPanel extends React.Component {
             log: '开始值机..',
             config: {
                 mode: '1',// 当ap/bp满时触发
+                /*
                 ap: {
                     questType: 'ap',
                     questPage: 'http://gbf.game.mbga.jp/#quest/extra',
                     questID: '40022'
                 },
+                */
                 bp: {
                     questType: 'bp',
                     questPage: 'http://gbf.game.mbga.jp/#quest/assist'
